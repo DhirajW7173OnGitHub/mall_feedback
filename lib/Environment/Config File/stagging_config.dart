@@ -1,0 +1,15 @@
+import 'package:mall_app/Environment/Config%20File/base_config.dart';
+
+class StagingConfiguration implements BaseConfig {
+  @override
+  String get apiHost => 'https://malldashboard.onintouch.com/api/';
+
+  @override
+  String get domainHost => '';
+
+  @override
+  String get localDb => '';
+
+  @override
+  String get lastSyncId => "";
+}
