@@ -30,6 +30,7 @@ class FeedbackDatum {
   int id;
   String questions;
   String answerType;
+  String inputType;
   String createdAt;
   String updatedAt;
   List<Option> options;
@@ -37,6 +38,7 @@ class FeedbackDatum {
   FeedbackDatum({
     required this.id,
     required this.questions,
+    required this.inputType,
     required this.answerType,
     required this.createdAt,
     required this.updatedAt,
@@ -51,6 +53,9 @@ class FeedbackDatum {
         answerType: (["", null, false, 0].contains(json["answer_type"]))
             ? ""
             : json["answer_type"],
+        inputType: (["", null, false, 0].contains(json["input_type"]))
+            ? ""
+            : json["input_type"],
         createdAt: (["", null, false, 0].contains(json["created_at"]))
             ? ""
             : json["created_at"],
@@ -64,6 +69,7 @@ class FeedbackDatum {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "input_type": inputType,
         "questions": questions,
         "answer_type": answerType,
         "created_at": createdAt,

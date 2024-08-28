@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
+import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
 
 class FeedBackScreen extends StatefulWidget {
@@ -11,17 +13,33 @@ class FeedBackScreen extends StatefulWidget {
   State<FeedBackScreen> createState() => _FeedBackScreenState();
 }
 
-class _FeedBackScreenState extends State<FeedBackScreen> {
+class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
+  final _mobileFormKey = GlobalKey<FormState>();
+
   List<bool> isCheckedList = [];
 
   Map<int, int> selectedRadioValues = {};
 
-  String rating = "";
+  int selectedStars = 0;
+  int selectedSmiley = -1;
+
+  int? rating;
 
   @override
   void initState() {
     super.initState();
     globalBloc.doFetchFeedBackQueData();
+  }
+
+  selectEmojiFeedback(int index) {
+    switch (index) {
+      case 1:
+        return "Terrible";
+      case 2:
+        return "Bad";
+      case 3:
+        return "Good";
+    }
   }
 
   @override
@@ -62,7 +80,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                   itemCount: snapshot.data!.data.length,
                   itemBuilder: (context, index) {
                     var feedbackData = snapshot.data!.data[index];
-                    Widget answerWidget;
+                    // Widget answerWidget;
 
                     // Initialize the isCheckedList based on the number of options for Checkbox type
                     if (feedbackData.answerType == 'Checkbox' &&
@@ -71,20 +89,49 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                           List<bool>.filled(feedbackData.options.length, false);
                     }
 
+                    // Initialize answerWidget to a default widget
+                    Widget answerWidget = const SizedBox.shrink();
+
                     // Check the type of question and create the appropriate input widget
                     switch (feedbackData.answerType) {
                       case 'TextBox':
-                        answerWidget = const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              hintText: 'Enter your answer',
-                              contentPadding: EdgeInsets.only(left: 10),
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        );
+                        switch (feedbackData.inputType) {
+                          case "text":
+                            answerWidget = const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: TextField(
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter your answer',
+                                  contentPadding: EdgeInsets.only(left: 10),
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            );
+                            break;
+                          case "number":
+                            answerWidget = Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Form(
+                                key: _mobileFormKey,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.phone,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter your answer',
+                                    contentPadding: EdgeInsets.only(left: 10),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  validator: phoneValidation,
+                                  onChanged: (value) {
+                                    _mobileFormKey.currentState!.validate();
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            );
+                            break;
+                        }
                         break;
                       case 'Checkbox':
                         answerWidget = Column(
@@ -100,6 +147,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                             activeColor: Colors.purple,
                             onChanged: (bool? value) {
                               setState(() {
+                                isCheckedList = List<bool>.filled(
+                                    feedbackData.options.length, false);
                                 isCheckedList[optionIndex] = value!;
                                 log('Is checked Click : ${isCheckedList[optionIndex]}');
                               });
@@ -129,32 +178,65 @@ class _FeedBackScreenState extends State<FeedBackScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: List.generate(5, (starIndex) {
                             return IconButton(
+                              iconSize: 32,
                               icon: Icon(
-                                starIndex < 0 ? Icons.star : Icons.star_border,
+                                starIndex < selectedStars
+                                    ? Icons.star
+                                    : Icons.star_border,
                               ),
-                              onPressed: () {},
+                              color: starIndex < selectedStars
+                                  ? Colors.purple
+                                  : Colors.grey,
+                              onPressed: () {
+                                setState(() {
+                                  selectedStars = starIndex + 1;
+                                });
+                                log('Selected Stars: $selectedStars');
+                              },
                             );
                           }),
                         );
                         break;
+
                       case 'Smiley':
-                        answerWidget = Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            Icon(Icons.sentiment_very_dissatisfied),
-                            Icon(Icons.sentiment_dissatisfied),
-                            Icon(Icons.sentiment_neutral),
-                            Icon(Icons.sentiment_satisfied),
-                            Icon(Icons.sentiment_very_satisfied),
-                          ].map<Widget>((icon) {
-                            return IconButton(
-                              icon: icon,
-                              onPressed: () {
-                                // Handle smiley selection
-                              },
-                            );
-                          }).toList(),
+                        answerWidget = EmojiFeedback(
+                          elementSize: 40,
+                          labelTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontWeight: FontWeight.w400),
+                          onChanged: (value) {
+                            log('!!!!!!!!:$value');
+                          },
                         );
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     Icons.sentiment_very_dissatisfied,
+                        //     Icons.sentiment_dissatisfied,
+                        //     Icons.sentiment_neutral,
+                        //     Icons.sentiment_satisfied,
+                        //     Icons.sentiment_very_satisfied,
+                        //   ].asMap().entries.map<Widget>((entry) {
+                        //     int smileyIndex = entry.key;
+                        //     IconData icon = entry.value;
+                        //     return IconButton(
+                        //       iconSize: 40,
+                        //       icon: Icon(
+                        //         icon,
+                        //         color: smileyIndex == selectedSmiley
+                        //             ? Colors.purple
+                        //             : Colors.grey,
+                        //       ),
+                        //       onPressed: () {
+                        //         setState(() {
+                        //           selectedSmiley = smileyIndex;
+                        //         });
+                        //         log('Selected Smiley: $selectedSmiley');
+                        //       },
+                        //     );
+                        //   }).toList(),
+                        // );
                         break;
                       default:
                         answerWidget = const SizedBox.shrink();

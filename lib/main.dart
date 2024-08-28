@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Environment/environment.dart';
-import 'package:mall_app/splash_page.dart';
+import 'package:mall_app/Pages/splash_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

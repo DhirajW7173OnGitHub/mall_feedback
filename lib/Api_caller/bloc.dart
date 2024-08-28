@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 
 class GlobalBloc {
   final _apiCaller = ApiCaller();
+
   //feedBack Question Data
   BehaviorSubject<FeedbackModel> get getFeedbackQueData => _liveFeedbackQueData;
   final BehaviorSubject<FeedbackModel> _liveFeedbackQueData =
