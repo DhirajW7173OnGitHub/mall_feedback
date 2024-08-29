@@ -36,6 +36,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_emoji_feedback: ^0.1.2
+  internet_connection_checker_plus: ^2.5.1
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,8 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/certificate_prod.pem
+    - assets/certificate_dev.pem
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

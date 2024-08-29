@@ -8,6 +8,22 @@ import 'package:rxdart/rxdart.dart';
 class GlobalBloc {
   final _apiCaller = ApiCaller();
 
+  //User Login
+  doUserLogin({
+    String? phone,
+    String? pass,
+  }) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {"phone": phone, "password": pass};
+    try {
+      var res = await _apiCaller.userLogincall(bodyData);
+      log("doUserLogin Body Data : $bodyData---> RESPONSE: $res ");
+      // if(res.)
+    } catch (e) {
+      throw "Something went wrong in checkOtp: $e";
+    }
+  }
+
   //feedBack Question Data
   BehaviorSubject<FeedbackModel> get getFeedbackQueData => _liveFeedbackQueData;
   final BehaviorSubject<FeedbackModel> _liveFeedbackQueData =

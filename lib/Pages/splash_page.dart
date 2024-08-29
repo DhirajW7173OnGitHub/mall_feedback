@@ -26,8 +26,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple,
       body: Column(
-        children: [],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              "HELLO",
+              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                  color: Colors.white),
+            ),
+          ),
+        ],
       ),
     );
   }

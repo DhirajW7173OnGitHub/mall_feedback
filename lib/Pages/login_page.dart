@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mall_app/Pages/home_page.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
-import 'package:mall_app/feedback/feedback_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const FeedBackScreen(),
+                      builder: (context) => const HomePage(),
                     ),
                   );
                 },

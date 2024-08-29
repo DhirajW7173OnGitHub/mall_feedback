@@ -8,7 +8,7 @@ import 'package:mall_app/Pages/splash_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  HttpOverrides.global = MyHttpOverrides();
+  // HttpOverrides.global = MyHttpOverrides();
 
   //Enviroment SetUp
   const String environment = String.fromEnvironment(

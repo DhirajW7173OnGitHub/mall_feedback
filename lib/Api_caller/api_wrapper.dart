@@ -4,15 +4,21 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mall_app/Environment/base_data.dart';
+import 'package:mall_app/SSL_Pinning/ssl_pinning.dart';
 import 'package:mall_app/Utils/app_exception.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 
 class ApiWrapper {
+  static late http.Client _client;
+
   // Make a GET request to the API
   static Future<Map<String, dynamic>> get(String endpoint) async {
+    //Initialize Custom Client
+    _client = await getSSLPinningClient();
+
     final url = Uri.parse('$baseUrl/$endpoint');
     log('url: $url');
-    final response = await http.get(url);
+    final response = await _client.get(url);
 
     return _processResponse(response);
   }
@@ -20,12 +26,12 @@ class ApiWrapper {
   // Make a POST request to the API
   static Future<Map<String, dynamic>> post(
       String endpoint, dynamic body) async {
+    _client = await getSSLPinningClient();
     final url = Uri.parse('$baseUrl/$endpoint');
     log('url: $url' + ' body:$body ');
 
-    final response = await http.post(url,
-        // headers: <String, String>{"Authorization": CommonString.TOKEN},
-        body: body);
+    final response = await _client.post(url,
+        headers: {'Content-Type': 'application/json'}, body: body);
 
     return _processResponse(response);
   }
