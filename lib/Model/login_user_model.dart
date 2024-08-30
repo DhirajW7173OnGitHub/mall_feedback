@@ -29,7 +29,16 @@ class LoginUserDataModel {
         msg: (["", null, false, 0].contains(json["message"]))
             ? ""
             : json["message"],
-        user: UserDattum.fromJson(json["user"]),
+        user: json["user"] == null || json["user"] == {}
+            ? UserDattum(
+                id: 0,
+                name: "",
+                email: "",
+                mallIds: "",
+                roleId: 0,
+                location: "",
+                phone: "")
+            : UserDattum.fromJson(json["user"]),
         token:
             (["", null, false, 0].contains(json["token"])) ? "" : json["token"],
       );

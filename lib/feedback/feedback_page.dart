@@ -23,6 +23,9 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   final ageController = TextEditingController();
   final mobileController = TextEditingController();
 
+  final mobileFocusNode = FocusNode();
+  final nameFocusNode = FocusNode();
+
   List<bool> isCheckedList = [];
 
   // Map to store selected radio values for each question by question_id
@@ -90,6 +93,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
           child: TextFormField(
             controller: _nameController,
             keyboardType: TextInputType.name,
+            focusNode: nameFocusNode,
             enableInteractiveSelection: false,
             textInputAction: TextInputAction.done,
             textCapitalization: TextCapitalization.words,
@@ -127,6 +131,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
             child: TextFormField(
               controller: mobileController,
               keyboardType: TextInputType.phone,
+              focusNode: mobileFocusNode,
               enableInteractiveSelection: false,
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
@@ -334,110 +339,115 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feedback'),
-      ),
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('CANCEL'),
-          ),
-          ElevatedButton(
-            onPressed: clickOnSubmitButton,
-            child: const Text('SUBMIT'),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          StreamBuilder<FeedbackModel>(
-            stream: globalBloc.getFeedbackQueData.stream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text("No Data"),
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
-              return Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.data.length,
-                  itemBuilder: (context, index) {
-                    var feedbackData = snapshot.data!.data[index];
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Feedback'),
+        ),
+        bottomSheet: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('CANCEL'),
+            ),
+            ElevatedButton(
+              onPressed: clickOnSubmitButton,
+              child: const Text('SUBMIT'),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            StreamBuilder<FeedbackModel>(
+              stream: globalBloc.getFeedbackQueData.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text("No Data"),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.data.length,
+                    itemBuilder: (context, index) {
+                      var feedbackData = snapshot.data!.data[index];
 
-                    // Initialize the isCheckedList based on the number of options for Checkbox type
-                    if (feedbackData.answerType == 'Checkbox' &&
-                        isCheckedList.length != feedbackData.options.length) {
-                      isCheckedList =
-                          List<bool>.filled(feedbackData.options.length, false);
-                    }
+                      // Initialize the isCheckedList based on the number of options for Checkbox type
+                      if (feedbackData.answerType == 'Checkbox' &&
+                          isCheckedList.length != feedbackData.options.length) {
+                        isCheckedList = List<bool>.filled(
+                            feedbackData.options.length, false);
+                      }
 
-                    // Initialize answerWidget to a default widget
-                    Widget answerWidget = const SizedBox.shrink();
+                      // Initialize answerWidget to a default widget
+                      Widget answerWidget = const SizedBox.shrink();
 
-                    // Check the type of question and create the appropriate input widget
-                    switch (feedbackData.answerType) {
-                      case 'TextBox':
-                        answerWidget = _buildTextBox(feedbackData);
-                        break;
-                      case 'Checkbox':
-                        answerWidget = _buildCheckboxList(feedbackData);
-                        break;
-                      case 'Radio Button':
-                        answerWidget =
-                            _buildRadioButtonList(feedbackData, index);
-                        break;
-                      case 'Stars':
-                        answerWidget = _buildStarRating(feedbackData);
-                        break;
-                      case 'Smiley':
-                        answerWidget = _buildSmileyRating(feedbackData);
-                        break;
-                      default:
-                        answerWidget = const SizedBox.shrink();
-                    }
+                      // Check the type of question and create the appropriate input widget
+                      switch (feedbackData.answerType) {
+                        case 'TextBox':
+                          answerWidget = _buildTextBox(feedbackData);
+                          break;
+                        case 'Checkbox':
+                          answerWidget = _buildCheckboxList(feedbackData);
+                          break;
+                        case 'Radio Button':
+                          answerWidget =
+                              _buildRadioButtonList(feedbackData, index);
+                          break;
+                        case 'Stars':
+                          answerWidget = _buildStarRating(feedbackData);
+                          break;
+                        case 'Smiley':
+                          answerWidget = _buildSmileyRating(feedbackData);
+                          break;
+                        default:
+                          answerWidget = const SizedBox.shrink();
+                      }
 
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  feedbackData.questions,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.bold),
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    feedbackData.questions,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              answerWidget, // Add the input widget below the question
-                              const SizedBox(height: 10),
-                            ],
+                                answerWidget, // Add the input widget below the question
+                                const SizedBox(height: 10),
+                              ],
+                            ),
                           ),
-                        ),
-                        const Divider(),
-                      ],
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-          const SizedBox(
-            height: 80,
-          ),
-        ],
+                          const Divider(),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 80,
+            ),
+          ],
+        ),
       ),
     );
   }

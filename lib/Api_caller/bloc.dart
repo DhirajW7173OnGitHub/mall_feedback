@@ -23,36 +23,42 @@ class GlobalBloc {
     EasyLoading.show(dismissOnTap: false);
     Map bodyData = {"phone": phone, "password": pass};
     try {
-      Map<String, dynamic> response = await _apiCaller.userLogincall(bodyData);
-      log("doUserLogin Body Data : $bodyData---> RESPONSE: $response ");
-      var res = LoginUserDataModel.fromJson(response);
-      if (res.errorcode == 0 && res.msg.toLowerCase() == "success") {
-        await StorageUtil.putString(
-            localStorageData.ID, res.user.id.toString());
-        StorageUtil.putString(localStorageData.NAME, res.user.name);
-        StorageUtil.putString(
-            localStorageData.ROLE_ID, res.user.roleId.toString());
-        StorageUtil.putString(localStorageData.EMAIL, res.user.email);
-        StorageUtil.putString(localStorageData.MALL_ID, res.user.mallIds);
-        StorageUtil.putString(localStorageData.LOCATION, res.user.location);
-        StorageUtil.putString(localStorageData.PHONE, res.user.phone);
-        StorageUtil.putString(localStorageData.TOKEN, res.token);
+      var response = await _apiCaller.userLogincall(bodyData);
+      log("doUserLogin Body Data : $bodyData---> RESPONSE: ${response} ");
 
-        _verifyUser.add(res);
+      if (response["errorcode"] == 0) {
+        var res = LoginUserDataModel.fromJson(response);
+        if (res.errorcode == 0 && res.msg.toLowerCase() == "success") {
+          await StorageUtil.putString(
+              localStorageData.ID, res.user.id.toString());
+          StorageUtil.putString(localStorageData.NAME, res.user.name);
+          StorageUtil.putString(
+              localStorageData.ROLE_ID, res.user.roleId.toString());
+          StorageUtil.putString(localStorageData.EMAIL, res.user.email);
+          StorageUtil.putString(localStorageData.MALL_ID, res.user.mallIds);
+          StorageUtil.putString(localStorageData.LOCATION, res.user.location);
+          StorageUtil.putString(localStorageData.PHONE, res.user.phone);
+          StorageUtil.putString(localStorageData.TOKEN, res.token);
 
-        EasyLoading.dismiss();
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => HomePage(),
-        //   ),
-        // );
-        return res;
+          _verifyUser.add(res);
+
+          EasyLoading.dismiss();
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => HomePage(),
+          //   ),
+          // );
+          return res;
+        } else {
+          EasyLoading.dismiss();
+          globalUtils.showNegativeSnackBar(msg: res.msg);
+          return res;
+        }
       } else {
-        globalUtils.showNegativeSnackBar(msg: res.msg);
-        return res;
+        EasyLoading.dismiss();
+        return response;
       }
-      // if(res.)
     } catch (e) {
       throw "Something went wrong in doUserLogin: $e";
     }

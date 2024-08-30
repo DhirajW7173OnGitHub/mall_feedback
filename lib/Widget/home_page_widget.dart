@@ -11,8 +11,14 @@ class HomePageWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          StorageUtil.getString(localStorageData.NAME),
+        Center(
+          child: Text(
+            StorageUtil.getString(localStorageData.NAME),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );
