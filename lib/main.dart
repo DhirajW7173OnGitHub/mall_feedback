@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Environment/environment.dart';
 import 'package:mall_app/Pages/splash_page.dart';
+import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // HttpOverrides.global = MyHttpOverrides();
 
   //Enviroment SetUp
   const String environment = String.fromEnvironment(
     "ENVIRONMENT",
     defaultValue: Environment.DEV,
   );
+
+  await StorageUtil.getInstance();
 
   Environment().initConfig(environment);
 
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Colors.white,
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,
           foregroundColor: Colors.white,

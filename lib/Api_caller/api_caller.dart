@@ -10,7 +10,7 @@ class ApiCaller {
   static late http.Client _client;
 
   //User Login
-  Future<Map> userLogincall(Map body) async {
+  Future<Map<String, dynamic>> userLogincall(Map body) async {
     var endPoint = "userlogin";
     try {
       final res = await ApiWrapper.post(endPoint, body);

@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:mall_app/Pages/home_page.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:mall_app/Api_caller/bloc.dart';
+import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +16,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   final mobileFormKey = GlobalKey<FormState>();
   final mobileController = TextEditingController();
+  final passController = TextEditingController();
+
+  final mobileFocusNode = FocusNode();
+  final passFocusNode = FocusNode();
+
+  bool checkInternet = false;
+
+  bool passVisibility = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +52,10 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                   key: mobileFormKey,
                   child: TextFormField(
                     controller: mobileController,
+                    focusNode: mobileFocusNode,
+                    enableInteractiveSelection: false,
                     keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.only(left: 10),
                       border: OutlineInputBorder(),
@@ -50,23 +65,94 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                 ),
               ),
               const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  controller: passController,
+                  focusNode: passFocusNode,
+                  obscuringCharacter: "*",
+                  obscureText: !passVisibility,
+                  enableInteractiveSelection: false,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          passVisibility = !passVisibility;
+                        });
+                      },
+                      icon: passVisibility
+                          ? const Icon(Icons.visibility_outlined)
+                          : const Icon(Icons.visibility_off_outlined),
+                    ),
+                    contentPadding: const EdgeInsets.only(left: 10),
+                    border: const OutlineInputBorder(),
+                    hintText: "Enter password",
+                  ),
+                ),
+              ),
+              const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                  );
+                onPressed: () async {
+                  if (mobileController.text.isEmpty) {
+                    _getMessage("Enter Mobile Number");
+                  } else if (passController.text.isEmpty) {
+                    _getMessage("Enter Mobile Number");
+                  } else {
+                    if (mobileFormKey.currentState!.validate()) {
+                      _handleLogin();
+                    } else {
+                      _getMessage("Enter valid Mobile Number");
+                    }
+                  }
                 },
-                child: const Text('Sign Up'),
+                child: const Text('Login'),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _handleLogin() async {
+    checkInternet = await InternetConnection().hasInternetAccess;
+    if (checkInternet) {
+      final res = await globalBloc.doUserLogin(
+        phone: mobileController.text,
+        pass: passController.text,
+      );
+
+      log("####: ${res.errorcode}  -- ${res.msg}");
+
+      // if (res.errorcode == 0 && res.msg.toLowerCase() == "success") {
+      //   await sessionManager.updateLastLoggedInTimeAndLoggedInStatus();
+
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => const HomePage(),
+      //     ),
+      //   );
+      // } else {
+      //   _getMessage(res.msg);
+      // }
+    } else {
+      _getMessage("Check Internet Connection");
+    }
+  }
+
+  _getMessage(String msg) {
+    CommonCode.commonDialogForData(
+      context,
+      msg: msg,
+      isBarrier: false,
+      second: 2,
     );
   }
 }

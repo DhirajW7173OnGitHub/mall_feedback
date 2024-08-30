@@ -11,7 +11,7 @@ String loginUserDataModelToJson(LoginUserDataModel data) =>
     json.encode(data.toJson());
 
 class LoginUserDataModel {
-  String errorcode;
+  int errorcode;
   String msg;
   UserDattum user;
   String token;
@@ -26,7 +26,9 @@ class LoginUserDataModel {
   factory LoginUserDataModel.fromJson(Map<String, dynamic> json) =>
       LoginUserDataModel(
         errorcode: json["errorcode"],
-        msg: (["", null, false, 0].contains(json["msg"])) ? "" : json["msg"],
+        msg: (["", null, false, 0].contains(json["message"]))
+            ? ""
+            : json["message"],
         user: UserDattum.fromJson(json["user"]),
         token:
             (["", null, false, 0].contains(json["token"])) ? "" : json["token"],
@@ -34,24 +36,24 @@ class LoginUserDataModel {
 
   Map<String, dynamic> toJson() => {
         "errorcode": errorcode,
-        "msg": msg,
+        "message": msg,
         "user": user.toJson(),
         "token": token,
       };
 }
 
 class UserDattum {
-  String id;
+  int id;
   String name;
   String email;
   String mallIds;
-  String roleId;
-  String emailVerifiedAt;
-  String picture;
+  int roleId;
+  // String emailVerifiedAt;
+  // String picture;
   String location;
   String phone;
-  String createdAt;
-  String updatedAt;
+  // String createdAt;
+  // String updatedAt;
 
   UserDattum({
     required this.id,
@@ -59,16 +61,16 @@ class UserDattum {
     required this.email,
     required this.mallIds,
     required this.roleId,
-    required this.emailVerifiedAt,
-    required this.picture,
+    // required this.emailVerifiedAt,
+    // required this.picture,
     required this.location,
     required this.phone,
-    required this.createdAt,
-    required this.updatedAt,
+    // required this.createdAt,
+    // required this.updatedAt,
   });
 
   factory UserDattum.fromJson(Map<String, dynamic> json) => UserDattum(
-        id: (["", null, false, 0].contains(json["id"])) ? "" : json["id"],
+        id: json["id"],
         name: (["", null, false, 0].contains(json["name"])) ? "" : json["name"],
         email:
             (["", null, false, 0].contains(json["email"])) ? "" : json["email"],
@@ -76,26 +78,26 @@ class UserDattum {
             ? ""
             : json["mall_ids"],
         roleId: (["", null, false, 0].contains(json["role_id"]))
-            ? ""
+            ? 0
             : json["role_id"],
-        emailVerifiedAt:
-            (["", null, false, 0].contains(json["email_verified_at"]))
-                ? ""
-                : json["email_verified_at"],
-        picture: (["", null, false, 0].contains(json["picture"]))
-            ? ""
-            : json["picture"],
+        // emailVerifiedAt:
+        //     (["", null, false, 0].contains(json["email_verified_at"]))
+        //         ? ""
+        //         : json["email_verified_at"],
+        // picture: (["", null, false, 0].contains(json["picture"]))
+        //     ? ""
+        //     : json["picture"],
         location: (["", null, false, 0].contains(json["location"]))
             ? ""
             : json["location"],
         phone:
             (["", null, false, 0].contains(json["phone"])) ? "" : json["phone"],
-        createdAt: (["", null, false, 0].contains(json["created_at"]))
-            ? ""
-            : json["created_at"],
-        updatedAt: (["", null, false, 0].contains(json["updated_at"]))
-            ? ""
-            : json["updated_at"],
+        // createdAt: (["", null, false, 0].contains(json["created_at"]))
+        //     ? ""
+        //     : json["created_at"],
+        // updatedAt: (["", null, false, 0].contains(json["updated_at"]))
+        //     ? ""
+        //     : json["updated_at"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -104,11 +106,11 @@ class UserDattum {
         "email": email,
         "mall_ids": mallIds,
         "role_id": roleId,
-        "email_verified_at": emailVerifiedAt,
-        "picture": picture,
+        // "email_verified_at": emailVerifiedAt,
+        // "picture": picture,
         "location": location,
         "phone": phone,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        // "created_at": createdAt,
+        // "updated_at": updatedAt,
       };
 }
