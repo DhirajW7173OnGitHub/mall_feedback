@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Pages/home_page.dart';
-import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
+import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
+import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 
@@ -135,24 +134,24 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   Future<void> _handleLogin() async {
     checkInternet = await InternetConnection().hasInternetAccess;
     if (checkInternet) {
-      final res = await globalBloc.doUserLogin(
+      final res = await globalBloc.doUserLoginAndFetchUserData(
         phone: mobileController.text,
         pass: passController.text,
       );
-
-      log("####: ${res}  -- {res.msg}");
-
-      if (res["errorcode"] == 0 && res["message"].toLowerCase() == "success") {
-        await sessionManager.updateLastLoggedInTimeAndLoggedInStatus();
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
+      if (res.errorcode == 0 && res.msg.toLowerCase() == "success") {
+        await StorageUtil.putString(
+            localStorageData.ID, res.user.id.toString());
+        StorageUtil.putString(localStorageData.NAME, res.user.name);
+        StorageUtil.putString(
+            localStorageData.ROLE_ID, res.user.roleId.toString());
+        StorageUtil.putString(localStorageData.EMAIL, res.user.email);
+        StorageUtil.putString(localStorageData.MALL_ID, res.user.mallIds);
+        StorageUtil.putString(localStorageData.LOCATION, res.user.location);
+        StorageUtil.putString(localStorageData.PHONE, res.user.phone);
+        StorageUtil.putString(localStorageData.TOKEN, res.token);
+        _navigateFunc();
       } else {
-        _getMessage(res["message"]);
+        _getMessage(res.msg);
       }
     } else {
       _getMessage("Check Internet Connection");
@@ -165,6 +164,15 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
       msg: msg,
       isBarrier: false,
       second: 2,
+    );
+  }
+
+  _navigateFunc() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      ),
     );
   }
 }
