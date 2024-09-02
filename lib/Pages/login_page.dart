@@ -27,6 +27,15 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   bool passVisibility = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    mobileController.dispose();
+    passController.dispose();
+    mobileFocusNode.unfocus();
+    passFocusNode.unfocus();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

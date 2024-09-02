@@ -22,6 +22,45 @@ class ApiCaller {
     }
   }
 
+  //Mark Attendance
+  Future<Map> markUserAttendance(Map body) async {
+    var endPoint = "mark-attendance";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print('markUserAttendance Body Data : $body --Response : $res');
+      return res;
+    } catch (e) {
+      print('markUserAttendance Error : $e');
+      throw "Something went Wrong : $e";
+    }
+  }
+
+  //End Mark Attendance
+  Future<Map> endMarkUserAttendance(Map body) async {
+    var endPoint = "end-attendance";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print('endMarkUserAttendance Body Data : $body --Response : $res');
+      return res;
+    } catch (e) {
+      print('endMarkUserAttendance Error : $e');
+      throw "Something went Wrong : $e";
+    }
+  }
+
+  //Menu Data Api
+  Future<Map<String, dynamic>> getMobileMenuData(Map body) async {
+    var endPoint = "get-mobile-menu";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print("getMobileMenuData Body Data : $body -- Response : $res");
+      return res;
+    } catch (e) {
+      print('getMobileMenuData Error : $e');
+      throw "Something went Wrong : $e";
+    }
+  }
+
   //Feedback Question Data
   Future<Map<String, dynamic>> getDataOfFeedBack() async {
     var endPoint = "feedback-questions";

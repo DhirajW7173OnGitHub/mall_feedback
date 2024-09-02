@@ -38,6 +38,11 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.white),
         ),
+        textButtonTheme: const TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(Colors.purple),
+          ),
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.purple,

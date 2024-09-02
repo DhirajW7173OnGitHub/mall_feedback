@@ -170,7 +170,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
+        appBar: AppBar(
+          title: const Text('User Profile'),
+        ),
+        body: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [],
         ),
