@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class GlobalUtils {
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey(debugLabel: 'scaffoldMessengerKey');
   showNegativeSnackBar({
     VoidCallback? onVisible,
     String? msg,
@@ -15,9 +17,20 @@ class GlobalUtils {
             color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.purple,
         duration: Duration(seconds: seconds),
         onVisible: onVisible,
+      ),
+    );
+  }
+
+  void showSnackBar(String message, {Color color = Colors.purple}) {
+    final messenger = scaffoldMessengerKey.currentState;
+    messenger?.showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content: Text(message),
+        backgroundColor: color,
       ),
     );
   }

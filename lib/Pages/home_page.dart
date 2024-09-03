@@ -13,6 +13,7 @@ import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Utils/global_utils.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
 
@@ -50,17 +51,15 @@ class _HomePageState extends State<HomePage> {
     DateTime now = DateTime.now();
     String currentDate = DateFormat('yyyy-MM-dd').format(now);
     String currentTime = DateFormat('HH:mm:ss').format(now);
-    var res = await globalBloc.doMarkUserAttendance(
-        userId: StorageUtil.getString(localStorageData.ID),
-        todayDate: currentDate,
-        startTime: currentTime,
-        lat: "",
-        long: "",
-        present: "yes");
-    if (res["errorcode"] == 0) {
+    var res = await globalBloc.doFetchAttendanceDetailsData(
+        userId: StorageUtil.getString(localStorageData.ID), date: currentDate);
+
+    log('Attendance :${res.attendance == {}}--${res.errorcode} ${res.msg}');
+    if (res.attendance != {} && res.errorcode == 1) {
       initialDialogForAttendance();
     } else {
-      _getCommonCodeDialog(res["message"]);
+      globalUtils.showSnackBar(res.msg);
+      //_getCommonCodeDialog(res.msg);
     }
   }
 
@@ -234,7 +233,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: checkInFromMap,
               child: const Text(
                 'Check In',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.purple),
               ),
             ),
           ],
@@ -268,7 +267,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(100),
+          preferredSize: const Size.fromHeight(90),
           child: Container(
             child: HomePageWidget(),
           ),

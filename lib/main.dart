@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Environment/environment.dart';
 import 'package:mall_app/Pages/splash_page.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
+import 'package:mall_app/Utils/global_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: globalUtils.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         drawerTheme: const DrawerThemeData(

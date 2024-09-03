@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Center(
             child: Text(
-              "HELLO",
+              "WEL-COME",
               style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 40,

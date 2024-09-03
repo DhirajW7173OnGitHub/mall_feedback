@@ -456,33 +456,28 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     checkInternet = await InternetConnection().hasInternetAccess;
     log('Internet $checkInternet');
     if (checkInternet) {
-      log("Feedback List : $feedbackList");
-      var res = await ApiCaller().uploadFeedbackData(feedbackList);
-
-      if (res!["errorcode"] == 0) {
-        finalSubmitDialog(msg: res["message"]);
+      if (_nameController.text.isEmpty) {
+        _getMessage("Please, Enter Name");
+      } else if (mobileController.text.isEmpty) {
+        _getMessage("Please, Enter Mobile Number");
+      } else if (selectedCheckBox.isEmpty || selectedCheckBox == []) {
+        _getMessage("Mark atleast one check-Box");
+      } else if (smileySelection.isEmpty) {
+        _getMessage("Select One Experience");
+      } else if (selectedRadioButton.isEmpty) {
+        _getMessage("Select select feedback");
+      } else if (selectedStars == 0) {
+        _getMessage("Mark Atleast one Star");
       } else {
-        _getMessage(res["message"]);
+        log("Feedback List : $feedbackList");
+        var res = await ApiCaller().uploadFeedbackData(feedbackList);
+
+        if (res!["errorcode"] == 0) {
+          finalSubmitDialog(msg: res["message"]);
+        } else {
+          _getMessage(res["message"]);
+        }
       }
-      // if (_nameController.text.isEmpty) {
-      //   _getMessage("Please, Enter Name");
-      // }
-      // // else if (ageController.text.isEmpty) {
-      // //   _getMessage("Please, Enter Age");
-      // // }
-      // else if (mobileController.text.isEmpty) {
-      //   _getMessage("Please, Enter Mobile Number");
-      // } else if (selectedCheckBox.isEmpty || selectedCheckBox == []) {
-      //   _getMessage("Mark atleast one check-Box");
-      // } else if (smileySelection.isEmpty) {
-      //   _getMessage("Select One Experience");
-      // } else if (selectedRadioButton.isEmpty) {
-      //   _getMessage("Select select feedback");
-      // } else if (selectedStars == 0) {
-      //   _getMessage("Mark Atleast one Star");
-      // } else {
-      //   log("All Work Correct");
-      // }
     } else {
       _getMessage("Check Internet Connection");
     }

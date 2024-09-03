@@ -36,6 +36,7 @@ class ApiWrapper {
   }
 
   static dynamic _processResponse(http.Response response) {
+    log('Response Status Code : ${response.statusCode} ');
     switch (response.statusCode) {
       case 200:
         var responseJson = jsonDecode(response.body);

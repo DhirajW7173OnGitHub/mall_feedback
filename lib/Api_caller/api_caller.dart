@@ -118,4 +118,18 @@ class ApiCaller {
       return null;
     }
   }
+
+  //Attendance Data Fetch get-attendance-data
+  Future<Map<String, dynamic>> getUserAttendanceDetails(Map body) async {
+    var endPoint = "get-attendance-data";
+
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print("getUserAttendanceDetails body Data : $body --Response : $res");
+      return res;
+    } catch (e) {
+      print('uploadFeedbackData Error: $e');
+      throw "Something Went Wrong $e";
+    }
+  }
 }

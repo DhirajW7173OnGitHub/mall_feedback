@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Api_caller/api_caller.dart';
+import 'package:mall_app/Attendance%20/Model/attendance_details_model.dart';
 import 'package:mall_app/Model/login_user_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
@@ -184,6 +185,33 @@ class GlobalBloc {
       return data;
     } catch (e) {
       log("doFetchFeedBackQueData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //Fetch Attendance Detail
+  BehaviorSubject<AttendanceDataModel> get getAttendanceData =>
+      _liveAttendanceData;
+  final BehaviorSubject<AttendanceDataModel> _liveAttendanceData =
+      BehaviorSubject<AttendanceDataModel>();
+
+  Future<AttendanceDataModel> doFetchAttendanceDetailsData(
+      {String? userId, String? date}) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "user_id": userId,
+      "date": date,
+    };
+    try {
+      Map<String, dynamic> res =
+          await _apiCaller.getUserAttendanceDetails(bodyData);
+      log('doFetchAttendanceDetailsData Body Data : $bodyData -- Response : $res');
+      var data = AttendanceDataModel.fromJson(res);
+      _liveAttendanceData.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      log("doFetchAttendanceDetailsData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
