@@ -169,55 +169,57 @@ class _AttendancePageState extends State<AttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Attendance"),
-          actions: [
-            (endTime == "00:00:00")
-                ? TextButton(
-                    onPressed: _clickonMarkIcon,
-                    child: const Text(
-                      "End Day",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  )
-                : Container(),
-            // TextButton(
-            //     onPressed: _clickonMarkIcon,
-            //     child: const Text("mark"),
-            //   ),
-          ],
-        ),
-        body: Column(
-          children: [
-            StreamBuilder<AttendanceDataModel>(
-              stream: globalBloc.getAttendanceData.stream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Container();
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                var attendanceData = snapshot.data!.attendance;
-                return AttendanceCardWidget(
-                  userName: attendanceData.userName,
-                  date: attendanceData.date,
-                  endTime: attendanceData.endTime,
-                  reportedTime: attendanceData.reportedTime,
-                  startTime: attendanceData.startTime,
-                  status: attendanceData.status,
-                );
-              },
-            ),
-          ],
-        ),
-        //  SingleChildScrollView(
-        //   child:
-        // ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Attendance"),
+        actions: [
+          (endTime == "00:00:00")
+              ? TextButton(
+                  onPressed: _clickonMarkIcon,
+                  child: const Text(
+                    "End Day",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                )
+              : Container(),
+          // TextButton(
+          //     onPressed: _clickonMarkIcon,
+          //     child: const Text("mark"),
+          //   ),
+        ],
       ),
+      body: Column(
+        children: [
+          StreamBuilder<AttendanceDataModel>(
+            stream: globalBloc.getAttendanceData.stream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              var attendanceData = snapshot.data!.attendance;
+              return AttendanceCardWidget(
+                userName: attendanceData.userName,
+                date: attendanceData.date,
+                endTime: attendanceData.endTime,
+                reportedTime: attendanceData.reportedTime,
+                startTime: attendanceData.startTime,
+                status: attendanceData.status,
+              );
+            },
+          ),
+        ],
+      ),
+      //  SingleChildScrollView(
+      //   child:
+      // ),
     );
+
+    // SafeArea(
+    //   child:
+    //   );
   }
 
   _getCommonCodeDialog(String msg) {
