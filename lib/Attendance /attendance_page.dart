@@ -54,8 +54,8 @@ class _AttendancePageState extends State<AttendancePage> {
                 color: Colors.purple,
               ),
             ),
-            content: Text(
-              "Do you want un-marked your Attendance?",
+            content: const Text(
+              "Do you want to end your day? Your present location and time will be marked.",
               // (endTime == "00:00:00")
               //     ? "Do you want un-marked your Attendance?"
               //     : "Do you want marked your Attendance?",

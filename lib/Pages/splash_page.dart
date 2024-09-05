@@ -26,9 +26,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToPage() async {
-    final loggedIn = StorageUtil.getString(LocalStorageData.ISLOGGEDIN) != "";
+    final loggedIn = StorageUtil.getString(localStorageData.ISLOGGEDIN) != "";
     final lastLoginTime =
-        StorageUtil.getString(LocalStorageData.LASTLOGGEDINTIME);
+        StorageUtil.getString(localStorageData.LASTLOGGEDINTIME);
     if (loggedIn) {
       if (lastLoginTime != null) {
         final lastLoginDateTime = DateTime.parse(lastLoginTime);

@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:mall_app/Api_caller/api_caller.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
+
+import '../Api_caller/api_caller.dart';
 
 class FeedBackScreen extends StatefulWidget {
   const FeedBackScreen({super.key});
@@ -18,17 +19,21 @@ class FeedBackScreen extends StatefulWidget {
 
 class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   final _mobileFormKey = GlobalKey<FormState>();
+  final _emailFormKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
   final ageController = TextEditingController();
   final mobileController = TextEditingController();
+  final emailController = TextEditingController();
 
   final mobileFocusNode = FocusNode();
   final nameFocusNode = FocusNode();
+  final emailFocusNode = FocusNode();
+
+  List<FeedbackDatum> feedbackListDattum = [];
 
   List<bool> isCheckedList = [];
 
-  // Map to store selected radio values for each question by question_id
   Map<int, dynamic> selectedRadioValues = {};
 
   int selectedSmiley = -1;
@@ -46,6 +51,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   String smileySelection = "";
 
   Map<String, dynamic> nameTextBoxMapData = {};
+  Map<String, dynamic> emailTextBoxMapData = {};
   Map<String, dynamic> mobileTextBoxMapData = {};
   Map<String, dynamic> ageTextBoxMapData = {};
   Map<String, dynamic> radioButtonMapData = {};
@@ -58,7 +64,14 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   @override
   void initState() {
     super.initState();
-    globalBloc.doFetchFeedBackQueData();
+    _getFeedbackData();
+  }
+
+  _getFeedbackData() async {
+    var res = await globalBloc.doFetchFeedBackQueData();
+    setState(() {
+      feedbackListDattum.addAll(res.data);
+    });
   }
 
   selectEmojiFeedback(int index) {
@@ -184,6 +197,46 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
             ],
           ),
         );
+      case "email validation":
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Form(
+            key: _emailFormKey,
+            child: TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              focusNode: emailFocusNode,
+              enableInteractiveSelection: false,
+              textInputAction: TextInputAction.done,
+              decoration: const InputDecoration(
+                hintText: 'Enter your answer',
+                contentPadding: EdgeInsets.only(left: 10),
+                border: OutlineInputBorder(),
+              ),
+              validator: emailValidation,
+              onChanged: (value) {
+                _emailFormKey.currentState!.validate();
+                setState(() {
+                  emailTextBoxMapData = {
+                    "question_id": feedbackData.id,
+                    "answers": emailController.text
+                  };
+                });
+                int index = feedbackList.indexWhere(
+                    (element) => element["question_id"] == feedbackData.id);
+
+                if (index != -1) {
+                  feedbackList[index] = emailTextBoxMapData;
+                } else {
+                  feedbackList.add(emailTextBoxMapData);
+                }
+
+                log('Name Text BOx Data:$feedbackList');
+              },
+            ),
+          ),
+        );
+
       default:
         return const SizedBox.shrink();
     }
@@ -351,7 +404,9 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: const Text('CANCEL'),
             ),
             ElevatedButton(
@@ -373,6 +428,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 }
+
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -456,20 +512,28 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     checkInternet = await InternetConnection().hasInternetAccess;
     log('Internet $checkInternet');
     if (checkInternet) {
-      if (_nameController.text.isEmpty) {
-        _getMessage("Please, Enter Name");
-      } else if (mobileController.text.isEmpty) {
-        _getMessage("Please, Enter Mobile Number");
-      } else if (selectedCheckBox.isEmpty || selectedCheckBox == []) {
-        _getMessage("Mark atleast one check-Box");
-      } else if (smileySelection.isEmpty) {
-        _getMessage("Select One Experience");
-      } else if (selectedRadioButton.isEmpty) {
-        _getMessage("Select select feedback");
-      } else if (selectedStars == 0) {
-        _getMessage("Mark Atleast one Star");
+      List<int> availableAllId = feedbackListDattum
+          .map((item) => int.parse(item.id.toString()))
+          .toList();
+
+      List<int> questionIdFromFeedback =
+          feedbackList.map((item) => item["question_id"] as int).toList();
+
+      var data = [];
+      for (var availableId in availableAllId) {
+        if (!questionIdFromFeedback.contains(availableId)) {
+          data.add(availableId);
+        }
+      }
+      if (data.isNotEmpty) {
+        var que = getNotAnswerQuestionName(data.first);
+        CommonCode.commonDialogForData(
+          context,
+          msg: "Fill : $que",
+          isBarrier: false,
+          second: 4,
+        );
       } else {
-        log("Feedback List : $feedbackList");
         var res = await ApiCaller().uploadFeedbackData(feedbackList);
 
         if (res!["errorcode"] == 0) {
@@ -481,6 +545,13 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     } else {
       _getMessage("Check Internet Connection");
     }
+  }
+
+  String getNotAnswerQuestionName(int id) {
+    var item = feedbackListDattum.firstWhere(
+      (item) => item.id == id,
+    );
+    return item.questions;
   }
 
   void dialogForDatePicked(feedbackData) async {
@@ -581,210 +652,3 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     );
   }
 }
-
-// StreamBuilder<FeedbackModel>(
-//   stream: globalBloc.getFeedbackQueData.stream,
-//   builder: (context, snapshot) {
-//     if (!snapshot.hasData) {
-//       return const Center(
-//         child: Text("No Data"),
-//       );
-//     }
-//     if (snapshot.connectionState == ConnectionState.waiting) {
-//       return const CircularProgressIndicator();
-//     }
-//     return Expanded(
-//       child: ListView.builder(
-//         shrinkWrap: true,
-//         itemCount: snapshot.data!.data.length,
-//         itemBuilder: (context, index) {
-//           var feedbackData = snapshot.data!.data[index];
-//           // Widget answerWidget;
-
-//           // Initialize the isCheckedList based on the number of options for Checkbox type
-//           if (feedbackData.answerType == 'Checkbox' &&
-//               isCheckedList.length != feedbackData.options.length) {
-//             isCheckedList =
-//                 List<bool>.filled(feedbackData.options.length, false);
-//           }
-
-//           // Initialize answerWidget to a default widget
-//           Widget answerWidget = const SizedBox.shrink();
-
-//           // Check the type of question and create the appropriate input widget
-//           switch (feedbackData.answerType) {
-//             case 'TextBox':
-//               answerWidget = _buildTextBox(feedbackData);
-//               break;
-//             case 'Checkbox':
-//               answerWidget = _buildCheckboxList(feedbackData);
-//               break;
-//             case 'Radio Button':
-//               answerWidget =
-//                   _buildRadioButtonList(feedbackData, index);
-//               break;
-//             case 'Stars':
-//               answerWidget = _buildStarRating();
-//               break;
-//             case 'Smiley':
-//               answerWidget = _buildSmileyRating();
-//               break;
-//             default:
-//               answerWidget = const SizedBox.shrink();
-//           }
-
-//           return Column(
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(
-//                     horizontal: 10, vertical: 4),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Padding(
-//                       padding: const EdgeInsets.only(left: 10),
-//                       child: Text(
-//                         feedbackData.questions,
-//                         style: Theme.of(context)
-//                             .textTheme
-//                             .bodyLarge!
-//                             .copyWith(fontWeight: FontWeight.bold),
-//                       ),
-//                     ),
-//                     answerWidget, // Add the input widget below the question
-//                     const SizedBox(height: 10),
-//                   ],
-//                 ),
-//               ),
-//               const Divider(),
-//             ],
-//           );
-//         },
-//       ),
-//     );
-//   },
-// ),
-
-// switch (feedbackData.answerType) {
-//                       case 'TextBox':
-//                         answerWidget = _buildTextBoxWidget(feedbackData);
-//                         break;
-//                       case 'Checkbox':
-//                         answerWidget = _buildCheckboxList(feedbackData);
-//                         break;
-//                       case 'Radio Button':
-//                         answerWidget = Column(
-//                           children: feedbackData.options
-//                               .asMap()
-//                               .entries
-//                               .map<Widget>((entry) {
-//                             int optionIndex = entry.key;
-//                             var option = entry.value;
-
-//                             return RadioListTile(
-//                               title: Text(option.optionText),
-//                               value: option.id,
-//                               groupValue: selectedRadioValues[index],
-//                               onChanged: (int? value) {
-//                                 setState(() {
-//                                   selectedRadioValues[index] = value!;
-//                                   selectedRadioBut = feedbackData
-//                                       .options[optionIndex].optionText;
-//                                 });
-
-//                                 log('Selected Radio Button: $selectedRadioBut Selected Index :${selectedRadioValues[index]}');
-//                               },
-//                             );
-//                           }).toList(),
-//                         );
-
-//                         // Column(
-//                         //     children:
-//                         //         feedbackData.options.map<Widget>((option) {
-//                         //   return RadioListTile(
-//                         //     title: Text(option.optionText),
-//                         //     value: option.id,
-//                         //     groupValue: selectedRadioValues[index],
-//                         //     onChanged: (int? value) {
-//                         //       setState(() {
-//                         //         selectedRadioValues[index] = value!;
-//                         //       });
-//                         //       log('Selected Radio Button: ${selectedRadioValues[index]}');
-//                         //     },
-//                         //   );
-//                         // }).toList());
-//                         break;
-//                       case 'Stars':
-//                         answerWidget = Row(
-//                           mainAxisAlignment: MainAxisAlignment.start,
-//                           children: List.generate(
-//                             5,
-//                             (starIndex) {
-//                               return IconButton(
-//                                 iconSize: 32,
-//                                 icon: Icon(
-//                                   starIndex < selectedStars
-//                                       ? Icons.star
-//                                       : Icons.star_border,
-//                                 ),
-//                                 color: starIndex < selectedStars
-//                                     ? Colors.purple
-//                                     : Colors.grey,
-//                                 onPressed: () {
-//                                   setState(() {
-//                                     selectedStars = starIndex + 1;
-//                                   });
-//                                   log('Selected Stars: $selectedStars');
-//                                 },
-//                               );
-//                             },
-//                           ),
-//                         );
-//                         break;
-
-//                       case 'Smiley':
-//                         answerWidget = EmojiFeedback(
-//                           elementSize: 40,
-//                           labelTextStyle: Theme.of(context)
-//                               .textTheme
-//                               .bodySmall
-//                               ?.copyWith(fontWeight: FontWeight.w400),
-//                           onChanged: (value) {
-//                             setState(() {
-//                               smileySelection = selectEmojiFeedback(value);
-//                             });
-//                             log('Selected Smiley String : $smileySelection');
-//                           },
-//                         );
-//                         // Row(
-//                         //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                         //   children: [
-//                         //     Icons.sentiment_very_dissatisfied,
-//                         //     Icons.sentiment_dissatisfied,
-//                         //     Icons.sentiment_neutral,
-//                         //     Icons.sentiment_satisfied,
-//                         //     Icons.sentiment_very_satisfied,
-//                         //   ].asMap().entries.map<Widget>((entry) {
-//                         //     int smileyIndex = entry.key;
-//                         //     IconData icon = entry.value;
-//                         //     return IconButton(
-//                         //       iconSize: 40,
-//                         //       icon: Icon(
-//                         //         icon,
-//                         //         color: smileyIndex == selectedSmiley
-//                         //             ? Colors.purple
-//                         //             : Colors.grey,
-//                         //       ),
-//                         //       onPressed: () {
-//                         //         setState(() {
-//                         //           selectedSmiley = smileyIndex;
-//                         //         });
-//                         //         log('Selected Smiley: $selectedSmiley');
-//                         //       },
-//                         //     );
-//                         //   }).toList(),
-//                         // );
-//                         break;
-//                       default:
-//                         answerWidget = const SizedBox.shrink();
-//                     }

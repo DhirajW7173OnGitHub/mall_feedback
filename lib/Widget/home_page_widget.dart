@@ -5,7 +5,10 @@ import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 class HomePageWidget extends StatelessWidget {
   const HomePageWidget({
     super.key,
+    required this.onTap,
   });
+
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,14 @@ class HomePageWidget extends StatelessWidget {
                     .copyWith(fontWeight: FontWeight.w500),
               ),
             ],
+          ),
+          Spacer(),
+          IconButton(
+            onPressed: onTap,
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.purple,
+            ),
           ),
         ],
       ),

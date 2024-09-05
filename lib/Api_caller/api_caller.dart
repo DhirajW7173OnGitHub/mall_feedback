@@ -78,10 +78,9 @@ class ApiCaller {
   //Save Feed Back
   Future<Map<String, dynamic>?> uploadFeedbackData(List<Map> feedback) async {
     _client = await getSSLPinningClient();
-    var url = Uri.parse('$baseUrl/savefeedback');
 
-    log("Url : $url");
-
+    final String uri = '$baseUrl/savefeedback';
+    var url = Uri.parse(uri);
     var headers = {
       'Content-Type': 'application/json',
     };
@@ -100,11 +99,15 @@ class ApiCaller {
 
     var body = jsonEncode({'feedback': formattedFeedback});
 
-    log('Request Body: $body');
+    log('Url: $uri Request Body: $body');
 
     try {
-      final response = await _client.post(url, headers: headers, body: body);
-      log('Response Status Code: ${response.statusCode}');
+      final response = await _client.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+      print('Response Status Code: ${response.statusCode}');
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseJson = jsonDecode(response.body);
         print('All responses received successfully');

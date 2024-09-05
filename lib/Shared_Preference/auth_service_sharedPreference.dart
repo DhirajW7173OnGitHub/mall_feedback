@@ -6,19 +6,19 @@ import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 class SessionManager {
   Future<void> updateLastLoggedInTimeAndLoggedInStatus() async {
     final currentTime = DateTime.now();
-    await StorageUtil.putString(LocalStorageData.ISLOGGEDIN, "TRUE");
+    await StorageUtil.putString(localStorageData.ISLOGGEDIN, "TRUE");
     await StorageUtil.putString(
-        LocalStorageData.LASTLOGGEDINTIME, currentTime.toIso8601String());
+        localStorageData.LASTLOGGEDINTIME, currentTime.toIso8601String());
 
-    var loginStatus = StorageUtil.getString(LocalStorageData.ISLOGGEDIN);
-    var loggedTime = StorageUtil.getString(LocalStorageData.LASTLOGGEDINTIME);
+    var loginStatus = StorageUtil.getString(localStorageData.ISLOGGEDIN);
+    var loggedTime = StorageUtil.getString(localStorageData.LASTLOGGEDINTIME);
 
     log('islogged: $loginStatus --- loggedONTIME: $loggedTime');
   }
 
   Future<void> logout() async {
-    await StorageUtil.remove(LocalStorageData.ISLOGGEDIN);
-    await StorageUtil.remove(LocalStorageData.LASTLOGGEDINTIME);
+    await StorageUtil.remove(localStorageData.ISLOGGEDIN);
+    await StorageUtil.remove(localStorageData.LASTLOGGEDINTIME);
   }
 
   void updateLoggedInTimeAndLoggedStatus() {}

@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       scaffoldMessengerKey: globalUtils.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.transparent,
         drawerTheme: const DrawerThemeData(
           backgroundColor: Colors.white,
         ),

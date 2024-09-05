@@ -28,4 +28,18 @@ mixin ValidationMixin {
     }
     return null;
   }
+
+  String? emailValidation(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Enter Email";
+    }
+
+    String pattern =
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+    RegExp regExp = RegExp(pattern);
+    if (!regExp.hasMatch(value)) {
+      return "Please enter valid number";
+    }
+    return null;
+  }
 }

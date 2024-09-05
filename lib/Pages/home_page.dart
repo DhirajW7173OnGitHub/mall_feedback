@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Attendance%20/attendance_page.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
+import 'package:mall_app/Pages/login_page.dart';
 import 'package:mall_app/Pages/user_profile_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
@@ -262,6 +263,61 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
   }
 
+  void clickOnLogOut() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Center(
+            child: Text(
+              "Alert",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.purple),
+            ),
+          ),
+          content: Text(
+            'Do you want Log-Out?',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("No"),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                  onPressed: clickOnYesButton,
+                  child: const Text("Yes"),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void clickOnYesButton() async {
+    await StorageUtil.putString(localStorageData.ISLOGGEDIN, "");
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+        (Route<dynamic> route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -269,7 +325,9 @@ class _HomePageState extends State<HomePage> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(90),
           child: Container(
-            child: HomePageWidget(),
+            child: HomePageWidget(
+              onTap: clickOnLogOut,
+            ),
           ),
         ),
         // drawer: Drawer(

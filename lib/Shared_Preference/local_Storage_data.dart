@@ -7,8 +7,8 @@ class LocalStorageData {
   String LOCATION = "LOCATION";
   String PHONE = "PHONE";
   String TOKEN = "TOKEN";
-  static const String ISLOGGEDIN = "ISLOGGEDIN";
-  static const String LASTLOGGEDINTIME = "LASTLOGGEDINTIME";
+  String ISLOGGEDIN = "ISLOGGEDIN";
+  String LASTLOGGEDINTIME = "LASTLOGGEDINTIME";
 }
 
 LocalStorageData localStorageData = LocalStorageData();

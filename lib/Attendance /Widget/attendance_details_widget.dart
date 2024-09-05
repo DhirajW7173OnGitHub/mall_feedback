@@ -43,12 +43,16 @@ class AttendanceCardWidget extends StatelessWidget {
                     alignment: Alignment.center,
                     width: MediaQuery.of(context).size.width * 0.16,
                     decoration: BoxDecoration(
+                      color: Colors.purple,
                       border: Border.all(
                         color: Colors.purple,
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(status),
+                    child: Text(
+                      status,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
