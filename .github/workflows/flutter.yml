@@ -1,0 +1,42 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - git_action_add  # Change this to the default branch of your repo
+  pull_request:
+    branches:
+      - git_action_add
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.5'  # Specify the Flutter version you need
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Run Flutter tests
+        run: flutter test
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Build Android APK
+        run: flutter build apk --release
+      
+      - name: Build iOS
+        runs-on: macos-latest
+        run: flutter build ios --release
+
+
+
+      # You can add more steps as needed
