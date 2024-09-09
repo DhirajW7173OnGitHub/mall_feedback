@@ -7,9 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Attendance%20/attendance_page.dart';
+import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
-import 'package:mall_app/Pages/login_page.dart';
-import 'package:mall_app/Pages/user_profile_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
@@ -17,6 +16,7 @@ import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
+import 'package:mall_app/loyalty%20/loyalty_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -330,6 +330,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
+
         // drawer: Drawer(
         //   child: Column(
         //     children: [
@@ -381,8 +382,8 @@ class _HomePageState extends State<HomePage> {
                   child: GridView.count(
                     scrollDirection: Axis.vertical,
                     crossAxisCount: 2,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
                     shrinkWrap: true,
                     children: List.generate(
                       menuItem.length,
@@ -397,48 +398,51 @@ class _HomePageState extends State<HomePage> {
                           imageName = "assets/icons/feedback1.png";
                         } else if (menuItem[index].id == 2) {
                           imageName = "assets/icons/attendance1.png";
+                        } else if (menuItem[index].id == 3) {
+                          imageName = "assets/icons/place.png";
                         } else {
                           imageName = "assets/icons/place.png";
                         }
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
+                          child: Container(
+                            // margin: const EdgeInsets.symmetric(horizontal: 10),
+                            // padding: const EdgeInsets.symmetric(
+                            //     horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                              color: color,
                             ),
-                            borderRadius: BorderRadius.circular(6),
-                            color: color,
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              menuNavigator(menuItem[index].id);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 70,
-                                    child: Container(
-                                      width: 60,
-                                      height: 50,
-                                      child: Image.asset(
-                                        imageName,
-                                        fit: BoxFit.fill,
+                            child: InkWell(
+                              onTap: () {
+                                menuNavigator(menuItem[index].id);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 70,
+                                      child: Container(
+                                        width: 60,
+                                        height: 50,
+                                        child: Image.asset(
+                                          imageName,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 30,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                1,
+                                    Expanded(
+                                      flex: 30,
+                                      child: Align(
+                                        alignment: Alignment.center,
                                         child: Text(
                                           menuTitle,
                                           maxLines: 3,
@@ -449,10 +453,25 @@ class _HomePageState extends State<HomePage> {
                                             color: Colors.black,
                                           ),
                                         ),
+                                        // Container(
+                                        //   width:
+                                        //       MediaQuery.of(context).size.width *
+                                        //           1,
+                                        //   child: Text(
+                                        //     menuTitle,
+                                        //     maxLines: 3,
+                                        //     textAlign: TextAlign.center,
+                                        //     style: const TextStyle(
+                                        //       fontSize: 14.0,
+                                        //       fontWeight: FontWeight.w500,
+                                        //       color: Colors.black,
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -469,22 +488,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void navigateToProfilePage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const UserProfileScreen(),
-      ),
-    );
-  }
+  // void navigateToProfilePage() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const UserProfileScreen(),
+  //     ),
+  //   );
+  // }
 
-  void navigatorPage(int index) {
-    switch (index) {
-      case 1:
-        navigateToProfilePage();
-        break;
-    }
-  }
+  // void navigatorPage(int index) {
+  //   switch (index) {
+  //     case 1:
+  //       navigateToProfilePage();
+  //       break;
+  //   }
+  // }
 
   void navigateFeedBackPage() async {
     Navigator.push(
@@ -504,13 +523,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  menuNavigator(int id) {
+  void navigateLoyaltyPage() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoyaltyPage(),
+      ),
+    );
+  }
+
+  void menuNavigator(int id) {
     switch (id) {
       case 1:
         navigateFeedBackPage();
         break;
       case 2:
         navigateAttendancePage();
+        break;
+      case 3:
+        navigateLoyaltyPage();
         break;
     }
   }

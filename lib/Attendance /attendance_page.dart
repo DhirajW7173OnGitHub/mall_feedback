@@ -48,7 +48,7 @@ class _AttendancePageState extends State<AttendancePage> {
         builder: (context) {
           return AlertDialog(
             title: const Text(
-              "Alert",
+              "Are you sure?",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.purple,
@@ -56,9 +56,6 @@ class _AttendancePageState extends State<AttendancePage> {
             ),
             content: const Text(
               "Do you want to end your day? Your present location and time will be marked.",
-              // (endTime == "00:00:00")
-              //     ? "Do you want un-marked your Attendance?"
-              //     : "Do you want marked your Attendance?",
               textAlign: TextAlign.center,
             ),
             actions: [

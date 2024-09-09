@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
@@ -20,15 +21,18 @@ class FeedBackScreen extends StatefulWidget {
 class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   final _mobileFormKey = GlobalKey<FormState>();
   final _emailFormKey = GlobalKey<FormState>();
+  final _commentFormKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
   final ageController = TextEditingController();
   final mobileController = TextEditingController();
   final emailController = TextEditingController();
+  final commentController = TextEditingController();
 
   final mobileFocusNode = FocusNode();
   final nameFocusNode = FocusNode();
   final emailFocusNode = FocusNode();
+  final commentFocusNode = FocusNode();
 
   List<FeedbackDatum> feedbackListDattum = [];
 
@@ -58,6 +62,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   Map<String, dynamic> starMapData = {};
   Map<String, dynamic> smileyMapData = {};
   Map<String, dynamic> checkBoxMapData = {};
+  Map<String, dynamic> genericTextBoxMapData = {};
+  Map<String, dynamic> commentTextAreaMapData = {};
 
   List<Map> feedbackList = [];
 
@@ -238,8 +244,79 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         );
 
       default:
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: TextFormField(
+            controller: TextEditingController(),
+            keyboardType: TextInputType.text,
+            focusNode: FocusNode(),
+            enableInteractiveSelection: false,
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(
+              hintText: 'Enter your answer',
+              contentPadding: EdgeInsets.only(left: 10),
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() {
+                genericTextBoxMapData = {
+                  "question_id": feedbackData.id,
+                  "answers": value
+                };
+              });
+              int index = feedbackList.indexWhere(
+                  (element) => element["question_id"] == feedbackData.id);
+
+              if (index != -1) {
+                feedbackList[index] = genericTextBoxMapData;
+              } else {
+                feedbackList.add(genericTextBoxMapData);
+              }
+
+              log('Generic TextBox Data:$feedbackList');
+            },
+          ),
+        );
     }
+  }
+
+  Widget _buildTextAreaBox(feedbackData) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: TextField(
+        controller: commentController,
+        focusNode: commentFocusNode,
+        maxLines: 6,
+        // inputFormatters: [
+        //   FilteringTextInputFormatter.allow(
+        //     RegExp(r'[a-zA-Z\s,.\?]'),
+        //   ),
+        // ],
+        keyboardType: TextInputType.multiline,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: 'Enter your text here',
+        ),
+        onChanged: (value) {
+          setState(() {
+            commentTextAreaMapData = {
+              "question_id": feedbackData.id,
+              "answers": commentController.text,
+            };
+          });
+          int index = feedbackList.indexWhere(
+              (element) => element["question_id"] == feedbackData.id);
+
+          if (index != -1) {
+            feedbackList[index] = commentTextAreaMapData;
+          } else {
+            feedbackList.add(commentTextAreaMapData);
+          }
+
+          log('Name Text BOx Data:$feedbackList');
+        },
+      ),
+    );
   }
 
   Widget _buildCheckboxList(feedbackData) {
@@ -451,6 +528,9 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                         case 'TextBox':
                           answerWidget = _buildTextBox(feedbackData);
                           break;
+                        case 'Textarea':
+                          answerWidget = _buildTextAreaBox(feedbackData);
+                          break;
                         case 'Checkbox':
                           answerWidget = _buildCheckboxList(feedbackData);
                           break;
@@ -512,6 +592,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     checkInternet = await InternetConnection().hasInternetAccess;
     log('Internet $checkInternet');
     if (checkInternet) {
+      EasyLoading.show(dismissOnTap: false);
       List<int> availableAllId = feedbackListDattum
           .map((item) => int.parse(item.id.toString()))
           .toList();
@@ -526,6 +607,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         }
       }
       if (data.isNotEmpty) {
+        EasyLoading.dismiss();
         var que = getNotAnswerQuestionName(data.first);
         CommonCode.commonDialogForData(
           context,
@@ -535,6 +617,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         );
       } else {
         var res = await ApiCaller().uploadFeedbackData(feedbackList);
+        EasyLoading.dismiss();
 
         if (res!["errorcode"] == 0) {
           finalSubmitDialog(msg: res["message"]);

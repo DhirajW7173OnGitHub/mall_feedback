@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mall_app/Pages/home_page.dart';
-import 'package:mall_app/Pages/login_page.dart';
+import 'package:mall_app/Initial%20Pages/home_page.dart';
+import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 

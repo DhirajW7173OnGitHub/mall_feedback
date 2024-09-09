@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Environment/environment.dart';
-import 'package:mall_app/Pages/splash_page.dart';
+import 'package:mall_app/Initial%20Pages/splash_page.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 
@@ -16,6 +14,7 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
+  //Initial instance of SharedPreference
   await StorageUtil.getInstance();
 
   Environment().initConfig(environment);
@@ -69,11 +68,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
+// class MyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext? context) {
+//     return super.createHttpClient(context)
+//       ..badCertificateCallback =
+//           (X509Certificate cert, String host, int port) => true;
+//   }
+// }

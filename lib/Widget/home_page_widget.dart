@@ -35,13 +35,13 @@ class HomePageWidget extends StatelessWidget {
                     color: Colors.purple,
                     fontSize: 26),
               ),
-              Text(
-                StorageUtil.getString(localStorageData.PHONE),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w500),
-              ),
+              // Text(
+              //   StorageUtil.getString(localStorageData.PHONE),
+              //   style: Theme.of(context)
+              //       .textTheme
+              //       .bodyLarge!
+              //       .copyWith(fontWeight: FontWeight.w500),
+              // ),
             ],
           ),
           Spacer(),

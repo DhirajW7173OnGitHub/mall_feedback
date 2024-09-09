@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mall_app/Pages/login_page.dart';
+import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/global_utils.dart';

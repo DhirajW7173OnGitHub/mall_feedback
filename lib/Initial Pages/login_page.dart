@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
-import 'package:mall_app/Pages/home_page.dart';
+import 'package:mall_app/Initial%20Pages/home_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
