@@ -325,6 +325,7 @@ class _HomePageState extends State<HomePage> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(90),
           child: Container(
+            color: Colors.transparent,
             child: HomePageWidget(
               onTap: clickOnLogOut,
             ),
