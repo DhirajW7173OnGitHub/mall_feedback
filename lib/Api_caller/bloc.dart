@@ -5,13 +5,14 @@ import 'package:mall_app/Api_caller/api_caller.dart';
 import 'package:mall_app/Attendance%20/Model/attendance_details_model.dart';
 import 'package:mall_app/Model/login_user_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
+import 'package:mall_app/Utils/global_utils.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GlobalBloc {
   final _apiCaller = ApiCaller();
 
-  //User Sign Up
+  //------------User Sign Up------------//
   Future<Map> doUserSignUp({
     String? firstName,
     String? lastName,
@@ -41,7 +42,7 @@ class GlobalBloc {
     }
   }
 
-  //User Login
+  //--------------------User Login--------------------//
   BehaviorSubject<LoginUserDataModel> get getLoginUserData => _verifyUser;
   final BehaviorSubject<LoginUserDataModel> _verifyUser =
       BehaviorSubject<LoginUserDataModel>();
@@ -118,7 +119,7 @@ class GlobalBloc {
   //   }
   // }
 
-  //Mobile MenuApi
+  //--------------------Mobile MenuApi------------------//
   BehaviorSubject<MobileMenuModel> get getMobileMenu => _liveMobileMenuData;
   final BehaviorSubject<MobileMenuModel> _liveMobileMenuData =
       BehaviorSubject<MobileMenuModel>();
@@ -142,7 +143,7 @@ class GlobalBloc {
     }
   }
 
-  //Mark USer Attedance
+  //------------Mark USer Attedance------------------//
   Future<Map> doMarkUserAttendance({
     String? userId,
     String? todayDate,
@@ -163,6 +164,7 @@ class GlobalBloc {
     try {
       var res = await _apiCaller.markUserAttendance(bodyData);
       log("doMarkUserAttendance Body Data : $bodyData --Response : $res");
+      globalUtils.showSnackBar(res['msg']);
       EasyLoading.dismiss();
       return res;
     } catch (e) {
@@ -171,7 +173,7 @@ class GlobalBloc {
     }
   }
 
-  // End Marked Attendance
+  //----------------End Marked Attendance----------------//
   Future<Map> doUnMarkUserAttendance({
     String? userId,
     String? date,
@@ -199,7 +201,7 @@ class GlobalBloc {
     }
   }
 
-  //feedBack Question Data
+  //---------------feedBack Question Data---------------//
   BehaviorSubject<FeedbackModel> get getFeedbackQueData => _liveFeedbackQueData;
   final BehaviorSubject<FeedbackModel> _liveFeedbackQueData =
       BehaviorSubject<FeedbackModel>();
@@ -219,7 +221,7 @@ class GlobalBloc {
     }
   }
 
-  //Fetch Attendance Detail
+  //----------------------Fetch Attendance Detail------------------//
   BehaviorSubject<AttendanceDataModel> get getAttendanceData =>
       _liveAttendanceData;
   final BehaviorSubject<AttendanceDataModel> _liveAttendanceData =

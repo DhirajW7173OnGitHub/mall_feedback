@@ -36,8 +36,7 @@ class ApiCaller {
     }
   }
 
-  //Mark Attendance
-  //------------------------Sign Up---------------------//
+  //------------------------Mark Attendance---------------------//
   Future<Map> markUserAttendance(Map body) async {
     var endPoint = "mark-attendance";
     try {
@@ -50,8 +49,7 @@ class ApiCaller {
     }
   }
 
-  //End Mark Attendance
-  //------------------------Sign Up---------------------//
+  //------------------------End Mark Attendance---------------------//
   Future<Map> endMarkUserAttendance(Map body) async {
     var endPoint = "end-attendance";
     try {
@@ -64,8 +62,7 @@ class ApiCaller {
     }
   }
 
-  //Menu Data Api
-  //------------------------Sign Up---------------------//
+  //------------------------Menu Data Api---------------------//
   Future<Map<String, dynamic>> getMobileMenuData(Map body) async {
     var endPoint = "get-mobile-menu";
     try {
@@ -78,8 +75,7 @@ class ApiCaller {
     }
   }
 
-  //Feedback Question Data
-  //------------------------Sign Up---------------------//
+  //------------------------Feedback Question Data---------------------//
   Future<Map<String, dynamic>> getDataOfFeedBack() async {
     var endPoint = "feedback-questions";
 
