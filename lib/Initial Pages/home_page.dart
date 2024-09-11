@@ -334,7 +334,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(90),
+          preferredSize: const Size.fromHeight(80),
           child: Container(
             color: Colors.transparent,
             child: HomePageWidget(
@@ -375,7 +375,7 @@ class _HomePageState extends State<HomePage> {
           //  mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 100,
+              height: 50,
             ),
             StreamBuilder<MobileMenuModel>(
               stream: globalBloc.getMobileMenu.stream,
