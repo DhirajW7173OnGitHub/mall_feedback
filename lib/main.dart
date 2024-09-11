@@ -19,7 +19,9 @@ void main() async {
 
   Environment().initConfig(environment);
 
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -32,8 +34,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.transparent,
-        drawerTheme: const DrawerThemeData(
-          backgroundColor: Colors.white,
+        cardTheme: const CardTheme(
+          color: Colors.white,
+          elevation: 8,
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,
@@ -57,6 +60,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         colorScheme: ColorScheme.fromSeed(
+          //brightness: Brightness.dark,
           seedColor: Colors.purple,
           primary: Colors.purple,
         ),

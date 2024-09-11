@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Initial%20Pages/home_page.dart';
+import 'package:mall_app/Initial%20Pages/register_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
@@ -108,30 +109,61 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Don't have an account?",
+                        style: Theme.of(context).textTheme.bodyMedium!,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterPage(),
+                            ),
+                          );
+                        },
+                        child: const Text("Register Here"),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (mobileController.text.isEmpty) {
-                      _getMessage("Enter Mobile Number");
-                    } else if (passController.text.isEmpty) {
-                      _getMessage("Enter Mobile Number");
-                    } else {
-                      if (mobileFormKey.currentState!.validate()) {
-                        _handleLogin();
-                        // await globalBloc.doUserLogin(
-                        //   context,
-                        //   phone: mobileController.text,
-                        //   pass: passController.text,
-                        // );
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (mobileController.text.isEmpty) {
+                        _getMessage("Enter Mobile Number");
+                      } else if (passController.text.isEmpty) {
+                        _getMessage("Enter Mobile Number");
                       } else {
-                        _getMessage("Enter valid Mobile Number");
+                        if (mobileFormKey.currentState!.validate()) {
+                          _handleLogin();
+                        } else {
+                          _getMessage("Enter valid Mobile Number");
+                        }
                       }
-                    }
-                  },
-                  child: const Text('Login'),
+                    },
+                    child: const Text('Login'),
+                  ),
                 ),
+                const SizedBox(
+                  height: 12,
+                ),
+                // Center(
+                //   child: TextButton(
+                //     onPressed: () {},
+                //     child: const Text(
+                //       "I forgot my password",
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

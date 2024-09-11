@@ -11,6 +11,36 @@ import 'package:rxdart/rxdart.dart';
 class GlobalBloc {
   final _apiCaller = ApiCaller();
 
+  //User Sign Up
+  Future<Map> doUserSignUp({
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? email,
+    String? password,
+    String? confirmedPass,
+  }) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "first_name": firstName,
+      "last_name": lastName,
+      "phone": phone,
+      "email": email,
+      "password": password,
+      "password_confirmation": confirmedPass,
+    };
+
+    try {
+      var res = await _apiCaller.userSignUpWithData(bodyData);
+      log("doUserSignUp Body Data : $bodyData---> RESPONSE: $res ");
+      EasyLoading.dismiss();
+      return res;
+    } catch (e) {
+      log("doUserSignUp Error : $e");
+      throw "Something went wrong in doUserSignUp: $e";
+    }
+  }
+
   //User Login
   BehaviorSubject<LoginUserDataModel> get getLoginUserData => _verifyUser;
   final BehaviorSubject<LoginUserDataModel> _verifyUser =

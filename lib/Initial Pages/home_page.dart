@@ -12,7 +12,6 @@ import 'package:mall_app/Model/mobile_menu_model.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
-import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
@@ -51,15 +50,18 @@ class _HomePageState extends State<HomePage> {
   _getDialogForAttendance() async {
     DateTime now = DateTime.now();
     String currentDate = DateFormat('yyyy-MM-dd').format(now);
-    String currentTime = DateFormat('HH:mm:ss').format(now);
+    // String currentTime = DateFormat('HH:mm:ss').format(now);
     var res = await globalBloc.doFetchAttendanceDetailsData(
-        userId: StorageUtil.getString(localStorageData.ID), date: currentDate);
+      userId: StorageUtil.getString(localStorageData.ID),
+      date: currentDate,
+    );
 
     log('Attendance :${res.attendance == {}}--${res.errorcode} ${res.msg}');
     if (res.attendance != {} && res.errorcode == 1) {
       initialDialogForAttendance();
     } else {
-      globalUtils.showSnackBar(res.msg);
+      log('you have already marked your attendance');
+      //globalUtils.showSnackBar(res.msg);
       //_getCommonCodeDialog(res.msg);
     }
   }
@@ -73,11 +75,15 @@ class _HomePageState extends State<HomePage> {
           title: const Text(
             'Attendance Alert!',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.purple),
+            style: TextStyle(color: Colors.purple, fontWeight: FontWeight.bold),
           ),
-          content: const Text(
+          content: Text(
             'Would you like to submit your daily attendance now?',
             textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.bold),
           ),
           actions: [
             Row(
@@ -144,6 +150,7 @@ class _HomePageState extends State<HomePage> {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
+    //Location Service Checker(Disable/enable)
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -153,6 +160,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
+    //Permission check for location
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -167,7 +175,7 @@ class _HomePageState extends State<HomePage> {
         await LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
     await _addUserMarker(userLocation!);
 
-    log('adres: ${currentLocation!.latitude} and ${currentLocation!.longitude}');
+    log('Location Latitude: ${currentLocation!.latitude} and longitude: ${currentLocation!.longitude}');
 
     // address = await getLocation.getPlaceName(
     //   currentLocation!.latitude!,
@@ -179,6 +187,7 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 
+  //Showing Marker on Map
   _addUserMarker(LatLng? location) {
     final userMarker = Marker(
       markerId: const MarkerId('userLocation'),
@@ -200,6 +209,7 @@ class _HomePageState extends State<HomePage> {
     isEnabled == false
         ? _getUserLocation()
         : finalDialogForLocation(checkInFromMap);
+    globalUtils.showSnackBar("Success");
   }
 
   finalDialogForLocation(void Function() checkInFromMap) {
@@ -309,6 +319,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void clickOnYesButton() async {
+    //Delete ISLOGGEDIN data
     await StorageUtil.putString(localStorageData.ISLOGGEDIN, "");
 
     Navigator.of(context).pushAndRemoveUntil(
@@ -361,18 +372,18 @@ class _HomePageState extends State<HomePage> {
         //   ],
         // ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          //  mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
               height: 100,
             ),
             StreamBuilder<MobileMenuModel>(
               stream: globalBloc.getMobileMenu.stream,
+              // || snapshot.data!.mobileMenuList.isEmpty
               builder: (context, snapshot) {
-                if (!snapshot.hasData ||
-                    snapshot.data!.mobileMenuList.isEmpty) {
+                if (!snapshot.hasData) {
                   return const Center(
-                    child: Text("No Mofile Menu"),
+                    child: Text("No Mobile Menu"),
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -400,7 +411,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (menuItem[index].id == 2) {
                           imageName = "assets/icons/attendance1.png";
                         } else if (menuItem[index].id == 3) {
-                          imageName = "assets/icons/place.png";
+                          imageName = "assets/icons/loyalty.png";
                         } else {
                           imageName = "assets/icons/place.png";
                         }
@@ -432,7 +443,7 @@ class _HomePageState extends State<HomePage> {
                                     Expanded(
                                       flex: 70,
                                       child: Container(
-                                        width: 60,
+                                        width: 80,
                                         height: 50,
                                         child: Image.asset(
                                           imageName,
@@ -547,12 +558,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _getCommonCodeDialog(String msg) {
-    CommonCode.commonDialogForData(
-      context,
-      msg: msg,
-      isBarrier: false,
-      second: 2,
-    );
-  }
+  // _getCommonCodeDialog(String msg) {
+  //   CommonCode.commonDialogForData(
+  //     context,
+  //     msg: msg,
+  //     isBarrier: false,
+  //     second: 2,
+  //   );
+  // }
 }

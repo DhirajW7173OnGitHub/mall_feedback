@@ -44,7 +44,7 @@ class HomePageWidget extends StatelessWidget {
               // ),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           IconButton(
             onPressed: onTap,
             icon: const Icon(

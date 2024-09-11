@@ -28,7 +28,7 @@ class ApiWrapper {
       String endpoint, dynamic body) async {
     _client = await getSSLPinningClient();
     final url = Uri.parse('$baseUrl/$endpoint');
-    log('url: $url' + ' body:$body ');
+    log('url: $url' + ' body: $body ');
 
     final response = await _client.post(url, body: body);
 

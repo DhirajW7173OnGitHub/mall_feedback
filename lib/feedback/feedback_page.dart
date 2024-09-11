@@ -21,7 +21,7 @@ class FeedBackScreen extends StatefulWidget {
 class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   final _mobileFormKey = GlobalKey<FormState>();
   final _emailFormKey = GlobalKey<FormState>();
-  final _commentFormKey = GlobalKey<FormState>();
+//  final _commentFormKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
   final ageController = TextEditingController();
@@ -95,14 +95,14 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     }
   }
 
-  bool isIntValue(String value) {
-    try {
-      int.parse(value);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
+  // bool isIntValue(String value) {
+  //   try {
+  //     int.parse(value);
+  //     return true;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
 
   Widget _buildTextBox(feedbackData) {
     switch (feedbackData.inputType) {
@@ -137,7 +137,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 feedbackList.add(nameTextBoxMapData);
               }
 
-              log('Name Text BOx Data:$feedbackList');
+              log('Name Text Box Data:$feedbackList');
             },
           ),
         );
@@ -367,18 +367,10 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
           title: Text(option.optionText),
           value: option.id,
           groupValue: selectedRadioValues[feedbackData.id],
-          //selectedRadioValues[feedbackData.id],
           onChanged: (dynamic value) {
             setState(() {
               selectedRadioValues[feedbackData.id] = value;
-              // You can also store the selected option text or id as needed
-              //selectedRadioDataForID10 = option.optionText;
-              // if (feedbackData.id == 10) {
-              //   selectedRadioDataForID10 = option.optionText;
-              // } else {
-              //   selectedRadioDataForID12 = option.optionText;
-              // }
-              // Remove any existing entry for this feedbackData.id before adding the new one
+
               selectedRadioButton.removeWhere(
                   (element) => element.containsKey(feedbackData.id));
 
@@ -566,7 +558,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                                         .copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                answerWidget, // Add the input widget below the question
+                                // Add the input widget below the question
+                                answerWidget,
                                 const SizedBox(height: 10),
                               ],
                             ),
@@ -608,25 +601,19 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
       }
       if (data.isNotEmpty) {
         EasyLoading.dismiss();
-        var que = getNotAnswerQuestionName(data.first);
-        CommonCode.commonDialogForData(
-          context,
-          msg: "Fill : $que",
-          isBarrier: false,
-          second: 4,
-        );
+        var question = getNotAnswerQuestionName(data.first);
+        _getMessage("Fill : $question", 4);
       } else {
         var res = await ApiCaller().uploadFeedbackData(feedbackList);
         EasyLoading.dismiss();
-
         if (res!["errorcode"] == 0) {
           finalSubmitDialog(msg: res["message"]);
         } else {
-          _getMessage(res["message"]);
+          _getMessage(res["message"], 2);
         }
       }
     } else {
-      _getMessage("Check Internet Connection");
+      _getMessage("Check Internet Connection", 2);
     }
   }
 
@@ -726,12 +713,12 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         });
   }
 
-  _getMessage(String msg) {
+  _getMessage(String msg, int seconds) {
     CommonCode.commonDialogForData(
       context,
       msg: msg,
       isBarrier: false,
-      second: 2,
+      second: seconds,
     );
   }
 }

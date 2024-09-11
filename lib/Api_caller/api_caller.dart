@@ -9,7 +9,21 @@ import 'package:mall_app/SSL_Pinning/ssl_pinning.dart';
 class ApiCaller {
   static late http.Client _client;
 
-  //User Login
+  //------------------------Sign Up---------------------//
+  Future<Map> userSignUpWithData(Map body) async {
+    var endPoint = "signup";
+
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print("userSignUpWithData body Data : $body -- Response : $res");
+      return res;
+    } catch (e) {
+      print('userSignUpWithData Error : $e');
+      throw "Something went Wrong : $e";
+    }
+  }
+
+  //------------------------User Login---------------------//
   Future<Map<String, dynamic>> userLogincall(Map body) async {
     var endPoint = "userlogin";
     try {
@@ -23,6 +37,7 @@ class ApiCaller {
   }
 
   //Mark Attendance
+  //------------------------Sign Up---------------------//
   Future<Map> markUserAttendance(Map body) async {
     var endPoint = "mark-attendance";
     try {
@@ -36,6 +51,7 @@ class ApiCaller {
   }
 
   //End Mark Attendance
+  //------------------------Sign Up---------------------//
   Future<Map> endMarkUserAttendance(Map body) async {
     var endPoint = "end-attendance";
     try {
@@ -49,6 +65,7 @@ class ApiCaller {
   }
 
   //Menu Data Api
+  //------------------------Sign Up---------------------//
   Future<Map<String, dynamic>> getMobileMenuData(Map body) async {
     var endPoint = "get-mobile-menu";
     try {
@@ -62,6 +79,7 @@ class ApiCaller {
   }
 
   //Feedback Question Data
+  //------------------------Sign Up---------------------//
   Future<Map<String, dynamic>> getDataOfFeedBack() async {
     var endPoint = "feedback-questions";
 
@@ -75,11 +93,12 @@ class ApiCaller {
     }
   }
 
-  //Save Feed Back
+  //------------------------Save Feed Back---------------------//
   Future<Map<String, dynamic>?> uploadFeedbackData(List<Map> feedback) async {
     _client = await getSSLPinningClient();
 
     final String uri = '$baseUrl/savefeedback';
+
     var url = Uri.parse(uri);
     var headers = {
       'Content-Type': 'application/json',
@@ -97,15 +116,17 @@ class ApiCaller {
       };
     }).toList();
 
-    var body = jsonEncode({'feedback': formattedFeedback});
+    var bodyData = jsonEncode({
+      'feedback': formattedFeedback,
+    });
 
-    log('Url: $uri Request Body: $body');
+    log('Url: $uri Request BodyData: $bodyData');
 
     try {
       final response = await _client.post(
         url,
         headers: headers,
-        body: body,
+        body: bodyData,
       );
       print('Response Status Code: ${response.statusCode}');
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -122,7 +143,7 @@ class ApiCaller {
     }
   }
 
-  //Attendance Data Fetch get-attendance-data
+  //----------Attendance Data Fetch get-attendance-data--------------//
   Future<Map<String, dynamic>> getUserAttendanceDetails(Map body) async {
     var endPoint = "get-attendance-data";
 

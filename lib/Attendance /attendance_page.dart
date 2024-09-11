@@ -194,7 +194,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 return Container();
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               var attendanceData = snapshot.data!.attendance;
               return AttendanceCardWidget(
@@ -209,17 +209,10 @@ class _AttendancePageState extends State<AttendancePage> {
           ),
         ],
       ),
-      //  SingleChildScrollView(
-      //   child:
-      // ),
     );
-
-    // SafeArea(
-    //   child:
-    //   );
   }
 
-  _getCommonCodeDialog(String msg) {
+  void _getCommonCodeDialog(String msg) {
     CommonCode.commonDialogForData(
       context,
       msg: msg,
