@@ -13,6 +13,7 @@ String loginUserDataModelToJson(LoginUserDataModel data) =>
 class LoginUserDataModel {
   int errorcode;
   String msg;
+  int userType;
   UserDattum user;
   String token;
 
@@ -20,6 +21,7 @@ class LoginUserDataModel {
     required this.errorcode,
     required this.msg,
     required this.user,
+    required this.userType,
     required this.token,
   });
 
@@ -29,6 +31,9 @@ class LoginUserDataModel {
         msg: (["", null, false, 0].contains(json["message"]))
             ? ""
             : json["message"],
+        userType: (["", null, false, 0].contains(json["usertype"]))
+            ? 0
+            : json["usertype"],
         user: json["user"] == null || json["user"] == {}
             ? UserDattum(
                 id: 0,
@@ -48,6 +53,7 @@ class LoginUserDataModel {
         "message": msg,
         "user": user.toJson(),
         "token": token,
+        "usertype": userType,
       };
 }
 

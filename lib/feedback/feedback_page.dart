@@ -5,11 +5,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
+import 'package:mall_app/Api_caller/upload_data_api_caller.dart';
 import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
-
-import '../Api_caller/api_caller.dart';
 
 class FeedBackScreen extends StatefulWidget {
   const FeedBackScreen({super.key});
@@ -604,7 +603,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         var question = getNotAnswerQuestionName(data.first);
         _getMessage("Fill : $question", 4);
       } else {
-        var res = await ApiCaller().uploadFeedbackData(feedbackList);
+        var res =
+            await UploadFileDataApiCaller().uploadFeedbackData(feedbackList);
         EasyLoading.dismiss();
         if (res!["errorcode"] == 0) {
           finalSubmitDialog(msg: res["message"]);

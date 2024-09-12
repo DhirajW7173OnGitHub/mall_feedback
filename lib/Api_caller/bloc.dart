@@ -50,11 +50,13 @@ class GlobalBloc {
   Future<LoginUserDataModel> doUserLoginAndFetchUserData({
     String? phone,
     String? pass,
+    String? userType,
   }) async {
     EasyLoading.show(dismissOnTap: false);
     Map bodyData = {
       "phone": phone,
       "password": pass,
+      "usertype": userType,
     };
     try {
       var res = await _apiCaller.userLogincall(bodyData);
@@ -164,7 +166,7 @@ class GlobalBloc {
     try {
       var res = await _apiCaller.markUserAttendance(bodyData);
       log("doMarkUserAttendance Body Data : $bodyData --Response : $res");
-      globalUtils.showSnackBar(res['msg']);
+      globalUtils.showSnackBar(res['message']);
       EasyLoading.dismiss();
       return res;
     } catch (e) {

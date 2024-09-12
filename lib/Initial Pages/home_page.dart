@@ -12,7 +12,7 @@ import 'package:mall_app/Model/mobile_menu_model.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
-import 'package:mall_app/Utils/global_utils.dart';
+import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
 import 'package:mall_app/loyalty%20/loyalty_page.dart';
@@ -209,7 +209,6 @@ class _HomePageState extends State<HomePage> {
     isEnabled == false
         ? _getUserLocation()
         : finalDialogForLocation(checkInFromMap);
-    globalUtils.showSnackBar("Success");
   }
 
   finalDialogForLocation(void Function() checkInFromMap) {
@@ -254,7 +253,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   //Mark Attendance
-  void _getLocationAndTime(String isPresent) async {
+  Future<void> _getLocationAndTime(String isPresent) async {
     EasyLoading.show(dismissOnTap: false);
     DateTime now = DateTime.now();
     String currentDate = DateFormat('yyyy-MM-dd').format(now);
@@ -274,48 +273,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void clickOnLogOut() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              "Alert",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.purple),
-            ),
-          ),
-          content: Text(
-            'Do you want Log-Out?',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("No"),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: clickOnYesButton,
-                  child: const Text("Yes"),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
+    CommonLogOut.CommonLogoutDialog(context, onTapYes: clickOnYesButton);
   }
 
   void clickOnYesButton() async {
