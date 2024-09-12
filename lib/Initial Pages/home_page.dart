@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           contentPadding: const EdgeInsets.all(4),
           title: const Text('Your Current Location'),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             height: MediaQuery.of(context).size.height * 0.5,
             child: GoogleMap(

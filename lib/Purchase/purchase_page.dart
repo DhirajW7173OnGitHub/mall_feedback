@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
@@ -17,6 +18,10 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   void initState() {
     super.initState();
     sessionManager.updateLastLoggedInTimeAndLoggedInStatus();
+    globalBloc.doFetchOrderHistoryData(
+      phone: StorageUtil.getString(localStorageData.PHONE),
+      mallId: 1,
+    );
   }
 
   void clickOnLogOut() {
@@ -44,7 +49,30 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           ),
         ],
       ),
-      body: Column(),
+      body: Column(
+        children: [
+          StreamBuilder<Map>(
+            stream: globalBloc.getOrderHistory.stream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: Text("No Data"),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              return SizedBox(
+                child: Column(
+                  children: [
+                    Text(snapshot.data!.entries.toString()),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

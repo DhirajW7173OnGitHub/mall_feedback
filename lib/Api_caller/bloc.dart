@@ -249,6 +249,30 @@ class GlobalBloc {
       throw "Something Went Wrong : $e";
     }
   }
+
+  //--------------------Order History Data-----------------//
+  BehaviorSubject<Map> get getOrderHistory => _liveOrderHistory;
+  final BehaviorSubject<Map> _liveOrderHistory = BehaviorSubject<Map>();
+
+  Future<Map> doFetchOrderHistoryData({String? phone, int? mallId}) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "phone": phone,
+      "mall_id": mallId,
+    };
+
+    try {
+      var res = await _apiCaller.getOrderHistoryData(bodyData);
+      log("doFetchOrderHistoryData BodyData : $bodyData ---Response : $res");
+      _liveOrderHistory.add(res);
+      EasyLoading.dismiss();
+      return res;
+    } catch (e) {
+      EasyLoading.dismiss();
+      log("doFetchOrderHistoryData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
 }
 
 GlobalBloc globalBloc = GlobalBloc();

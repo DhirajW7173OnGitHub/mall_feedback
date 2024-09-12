@@ -63,8 +63,8 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
         minHeight: 35,
         fontSize: 15,
         activeBgColor: const [
-          Colors.purple,
-          Color.fromARGB(255, 206, 80, 228),
+          Color(0xFF9716AD),
+          Color(0xFFD33EEE),
           // Color(0xFFE36AF8),
         ],
         activeFgColor: Colors.white,
@@ -137,6 +137,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        backgroundColor: const Color(0xFFF7EFF8),
         body: Container(
           alignment: Alignment.center,
           child: SingleChildScrollView(

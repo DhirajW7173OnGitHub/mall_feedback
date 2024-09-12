@@ -121,7 +121,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   //   }
   // }
 
-  Future<bool> _clickOnLogOut() async {
+  Future<bool> clickOnLogOut() async {
     return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(

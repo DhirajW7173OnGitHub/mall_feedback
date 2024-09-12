@@ -186,7 +186,7 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
               },
             ),
             const SizedBox(
-              height: 12,
+              height: 20,
             ),
             buildCommonTextWidget("Confirm Password"),
             TextFormField(

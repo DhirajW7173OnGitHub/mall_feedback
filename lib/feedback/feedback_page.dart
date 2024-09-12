@@ -390,7 +390,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
             } else {
               feedbackList.add(radioButtonMapData);
             }
-            log('Selected Radio Button for Question ID ${selectedRadioButton}: ');
+            log('Selected Radio Button for Question ID $selectedRadioButton');
           },
         );
       }).toList(),
