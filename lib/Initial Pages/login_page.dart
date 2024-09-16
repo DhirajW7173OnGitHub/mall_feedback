@@ -5,7 +5,6 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Initial%20Pages/home_page.dart';
 import 'package:mall_app/Initial%20Pages/register_page.dart';
-import 'package:mall_app/Purchase/purchase_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
@@ -33,6 +32,8 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
 
   int selectedToggle = 8;
 
+  bool isToggleSelect = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -53,6 +54,14 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
     }
   }
 
+  void changeInUI(int index) {
+    setState(() {
+      if (index == 8) {
+        isToggleSelect = true;
+      }
+    });
+  }
+
   Widget buildToggleSwitchWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -64,16 +73,18 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
         fontSize: 15,
         activeBgColor: const [
           Color(0xFF9716AD),
-          Color(0xFFD33EEE),
-          // Color(0xFFE36AF8),
         ],
         activeFgColor: Colors.white,
         inactiveBgColor: Colors.grey[300],
         inactiveFgColor: Colors.black,
         totalSwitches: 2,
+        initialLabelIndex: isToggleSelect ? 1 : 0,
         labels: const ["Customer", "Support User"],
         onToggle: (index) {
-          selectedToggle = _selectToggleSwitchIndex(index!)!;
+          setState(() {
+            selectedToggle = _selectToggleSwitchIndex(index!)!;
+            isToggleSelect = selectedToggle == 4;
+          });
         },
       ),
     );
@@ -160,28 +171,30 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                 buildMobileTextFieldWidget(),
                 const SizedBox(height: 15),
                 buildPasswordTextFieldWidget(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: Theme.of(context).textTheme.bodyMedium!,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterPage(),
+                isToggleSelect
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Don't have an account?",
+                              style: Theme.of(context).textTheme.bodyMedium!,
                             ),
-                          );
-                        },
-                        child: const Text("Register Here"),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const RegisterPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text("Register Here"),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -252,22 +265,28 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
 
   void _navigateFunc() {
     //
-    if (selectedToggle == 4 ||
-        StorageUtil.getString(localStorageData.USERTYPE) == "4") {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const PurchaseScreen(),
-        ),
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      ),
+    );
+    // if (selectedToggle == 4 ||
+    //     StorageUtil.getString(localStorageData.USERTYPE) == "4") {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const HomePage(),
+    //     ),
+    //   );
+    // } else {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const PurchaseScreen(),
+    //     ),
+    //   );
+    // }
   }
 
   void _getMessage(String msg) {

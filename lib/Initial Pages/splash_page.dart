@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mall_app/Initial%20Pages/home_page.dart';
 import 'package:mall_app/Initial%20Pages/login_page.dart';
-import 'package:mall_app/Purchase/purchase_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -46,21 +45,27 @@ class _SplashScreenState extends State<SplashScreen> {
 
         // Check if the last login time is within the last 24 hours
         if (timeDifference.inHours <= 24) {
-          if (StorageUtil.getString(localStorageData.USERTYPE) == "4") {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage(),
-              ),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PurchaseScreen(),
-              ),
-            );
-          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+          );
+          // if (StorageUtil.getString(localStorageData.USERTYPE) == "4") {
+          //   Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const HomePage(),
+          //     ),
+          //   );
+          // } else {
+          //   Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const PurchaseScreen(),
+          //     ),
+          //   );
+          // }
 
           return;
         }

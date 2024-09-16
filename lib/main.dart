@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.transparent,
-        cardTheme: const CardTheme(
-          color: Colors.white,
-          elevation: 8,
+        scrollbarTheme: const ScrollbarThemeData(
+          // trackColor: MaterialStatePropertyAll(Colors.purple),
+          thumbColor: MaterialStatePropertyAll(Colors.purple),
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,

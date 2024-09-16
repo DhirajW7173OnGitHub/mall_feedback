@@ -8,14 +8,15 @@ import 'package:location/location.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Attendance%20/attendance_page.dart';
 import 'package:mall_app/Initial%20Pages/login_page.dart';
+import 'package:mall_app/Loyalty%20/loyalty_page.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
+import 'package:mall_app/Purchase/purchase_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
-import 'package:mall_app/loyalty%20/loyalty_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,9 +42,12 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       globalBloc.doFetchMobileMenu(
         userId: StorageUtil.getString(localStorageData.ID),
+        usertype: StorageUtil.getString(localStorageData.USERTYPE),
       );
 
-      _getDialogForAttendance();
+      (StorageUtil.getString(localStorageData.USERTYPE) == "4")
+          ? _getDialogForAttendance()
+          : null;
     });
   }
 
@@ -369,6 +373,8 @@ class _HomePageState extends State<HomePage> {
                         } else if (menuItem[index].id == 2) {
                           imageName = "assets/icons/attendance1.png";
                         } else if (menuItem[index].id == 3) {
+                          imageName = "assets/icons/purchase.png";
+                        } else if (menuItem[index].id == 4) {
                           imageName = "assets/icons/loyalty.png";
                         } else {
                           imageName = "assets/icons/place.png";
@@ -377,9 +383,6 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 8),
                           child: Container(
-                            // margin: const EdgeInsets.symmetric(horizontal: 10),
-                            // padding: const EdgeInsets.symmetric(
-                            //     horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.black,
@@ -493,11 +496,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void navigatePurchasePage() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PurchaseScreen(),
+      ),
+    );
+  }
+
   void navigateLoyaltyPage() async {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const LoyaltyPage(),
+        // LoyaltyPage(),
       ),
     );
   }
@@ -511,6 +524,9 @@ class _HomePageState extends State<HomePage> {
         navigateAttendancePage();
         break;
       case 3:
+        navigatePurchasePage();
+        break;
+      case 4:
         navigateLoyaltyPage();
         break;
     }

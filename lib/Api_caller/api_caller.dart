@@ -99,7 +99,7 @@ class ApiCaller {
   }
 
   //----------------Order-History API----------------//
-  Future<Map> getOrderHistoryData(Map body) async {
+  Future<Map<String, dynamic>> getOrderHistoryData(Map body) async {
     var endPoint = "orders-history";
     try {
       final res = await ApiWrapper.post(endPoint, body);
@@ -108,6 +108,32 @@ class ApiCaller {
     } catch (e) {
       print('getOrderHistoryData Error: $e');
       throw "getOrderHistoryData Something Went Wrong $e";
+    }
+  }
+
+  //------------------Order Item History-----------------//
+  Future<Map<String, dynamic>> getItemHistoryData(Map body) async {
+    var endPoint = "item-history";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print("getItemHistoryData body Data : $body --Response : $res");
+      return res;
+    } catch (e) {
+      print('getItemHistoryData Error: $e');
+      throw "getItemHistoryData Something Went Wrong $e";
+    }
+  }
+
+  //----------------Purchase-History API----------------//
+  Future<Map<String, dynamic>> getPurchaseHistoryData(Map body) async {
+    var endPoint = "savePurchaseHistory";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print("getPurchaseHistoryData body Data : $body --Response : $res");
+      return res;
+    } catch (e) {
+      print('getPurchaseHistoryData Error: $e');
+      throw "getPurchaseHistoryData Something Went Wrong $e";
     }
   }
 }

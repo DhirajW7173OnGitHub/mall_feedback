@@ -5,6 +5,8 @@ import 'package:mall_app/Api_caller/api_caller.dart';
 import 'package:mall_app/Attendance%20/Model/attendance_details_model.dart';
 import 'package:mall_app/Model/login_user_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/order_history_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/order_item_history_model.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -126,10 +128,12 @@ class GlobalBloc {
   final BehaviorSubject<MobileMenuModel> _liveMobileMenuData =
       BehaviorSubject<MobileMenuModel>();
 
-  Future<MobileMenuModel> doFetchMobileMenu({String? userId}) async {
+  Future<MobileMenuModel> doFetchMobileMenu(
+      {String? userId, String? usertype}) async {
     EasyLoading.show(dismissOnTap: false);
     Map bodyData = {
       "user_id": userId,
+      "usertype": usertype,
     };
 
     try {
@@ -250,11 +254,13 @@ class GlobalBloc {
     }
   }
 
-  //--------------------Order History Data-----------------//
-  BehaviorSubject<Map> get getOrderHistory => _liveOrderHistory;
-  final BehaviorSubject<Map> _liveOrderHistory = BehaviorSubject<Map>();
+  //--------------------Item History Data-----------------//
+  BehaviorSubject<OrderHistoryModel> get getOrderHistory => _liveOrderHistory;
+  final BehaviorSubject<OrderHistoryModel> _liveOrderHistory =
+      BehaviorSubject<OrderHistoryModel>();
 
-  Future<Map> doFetchOrderHistoryData({String? phone, int? mallId}) async {
+  Future<OrderHistoryModel> doFetchOrderHistoryData(
+      {String? phone, String? mallId}) async {
     EasyLoading.show(dismissOnTap: false);
     Map bodyData = {
       "phone": phone,
@@ -262,14 +268,66 @@ class GlobalBloc {
     };
 
     try {
-      var res = await _apiCaller.getOrderHistoryData(bodyData);
+      Map<String, dynamic> res = await _apiCaller.getOrderHistoryData(bodyData);
       log("doFetchOrderHistoryData BodyData : $bodyData ---Response : $res");
-      _liveOrderHistory.add(res);
+      var data = OrderHistoryModel.fromJson(res);
+      _liveOrderHistory.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      EasyLoading.dismiss();
+      log("doFetchOrderHistoryData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //--------------------Order History Data-----------------//
+  BehaviorSubject<OrderItemHistoryModel> get getItemHistory => _liveItemHistory;
+  final BehaviorSubject<OrderItemHistoryModel> _liveItemHistory =
+      BehaviorSubject<OrderItemHistoryModel>();
+
+  Future<OrderItemHistoryModel> doFetchItemHistoryData(
+      {String? orderId}) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {"orderid": orderId};
+
+    try {
+      Map<String, dynamic> res = await _apiCaller.getItemHistoryData(bodyData);
+      log("doFetchItemHistoryData BodyData : $bodyData ---Response : $res");
+      var data = OrderItemHistoryModel.fromJson(res);
+      _liveItemHistory.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      EasyLoading.dismiss();
+      log("doFetchItemHistoryData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Purchase History ----------------//
+  BehaviorSubject<Map> get getPurchseHistory => _livePurchaseHistory;
+  final BehaviorSubject<Map> _livePurchaseHistory = BehaviorSubject<Map>();
+
+  Future<Map> doFetchPurchaseHistoryData(
+      {String? phone, String? mallId}) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "phone": phone,
+      "mall_id": mallId,
+    };
+
+    try {
+      Map<String, dynamic> res =
+          await _apiCaller.getPurchaseHistoryData(bodyData);
+      log("doFetchPurchaseHistoryData BodyData : $bodyData ---Response : $res");
+
+      _livePurchaseHistory.add(res);
       EasyLoading.dismiss();
       return res;
     } catch (e) {
       EasyLoading.dismiss();
-      log("doFetchOrderHistoryData Error : $e");
+      log("doFetchPurchaseHistoryData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
