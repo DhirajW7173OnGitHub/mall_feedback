@@ -202,7 +202,7 @@ class OrderDetailsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Retur Tax :",
+                  "Return Tax :",
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
