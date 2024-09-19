@@ -25,30 +25,30 @@ class OrderListWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Card(
-        elevation: 8,
+        //  elevation: 8,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Store ID :-",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    storeId,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       "Store ID :-",
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .bodyLarge!
+              //           .copyWith(fontWeight: FontWeight.bold),
+              //     ),
+              //     Text(
+              //       storeId,
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .bodyMedium!
+              //           .copyWith(fontWeight: FontWeight.w500),
+              //     )
+              //   ],
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -72,7 +72,7 @@ class OrderListWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Receipt Date  :-",
+                    "Invoice Date  :-",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
@@ -87,44 +87,45 @@ class OrderListWidget extends StatelessWidget {
                   )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Customer Name :-",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    customerName,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Customer Mobile Number :-",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    phone,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       "Customer Name :-",
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .bodyLarge!
+              //           .copyWith(fontWeight: FontWeight.bold),
+              //     ),
+              //     Text(
+              //       customerName,
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .bodyMedium!
+              //           .copyWith(fontWeight: FontWeight.w500),
+              //     )
+              //   ],
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       "Customer Mobile Number :-",
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .bodyLarge!
+              //           .copyWith(fontWeight: FontWeight.bold),
+              //     ),
+              //     Text(
+              //       phone,
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .bodyMedium!
+              //           .copyWith(fontWeight: FontWeight.w500),
+              //     )
+              //   ],
+              // ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

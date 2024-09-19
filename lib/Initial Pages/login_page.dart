@@ -54,14 +54,6 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
     }
   }
 
-  void changeInUI(int index) {
-    setState(() {
-      if (index == 8) {
-        isToggleSelect = true;
-      }
-    });
-  }
-
   Widget buildToggleSwitchWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -78,11 +70,13 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
         inactiveBgColor: Colors.grey[300],
         inactiveFgColor: Colors.black,
         totalSwitches: 2,
+        //According to isToggleSelect changes the Selection of Switch
         initialLabelIndex: isToggleSelect ? 1 : 0,
         labels: const ["Customer", "Support User"],
         onToggle: (index) {
           setState(() {
             selectedToggle = _selectToggleSwitchIndex(index!)!;
+            //selectedToggle == 4 is write then return true
             isToggleSelect = selectedToggle == 4;
           });
         },
@@ -101,11 +95,17 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
           enableInteractiveSelection: false,
           keyboardType: TextInputType.phone,
           textInputAction: TextInputAction.next,
+          //validation from Mixin class
+          validator: phoneValidation,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.only(left: 10),
             border: OutlineInputBorder(),
             hintText: "Enter Mobile Number",
           ),
+          onChanged: (value) {
+            mobileFormKey.currentState!.validate();
+            setState(() {});
+          },
         ),
       ),
     );
@@ -129,6 +129,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                 passVisibility = !passVisibility;
               });
             },
+            //conditional State. if passVisibility is true then show visibility_outlined this Icon
             icon: passVisibility
                 ? const Icon(Icons.visibility_outlined)
                 : const Icon(Icons.visibility_off_outlined),
@@ -145,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        //this is use for unfocus mode Of TextFormField keyboard
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
@@ -232,6 +234,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   }
 
   Future<void> _handleLogin() async {
+    //check Internet Connection
     checkInternet = await InternetConnection().hasInternetAccess;
     if (checkInternet) {
       log("Selected Toggle Button : $selectedToggle");
@@ -242,6 +245,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
       );
 
       if (res.errorcode == 0 && res.msg.toLowerCase() == "success") {
+        //save user Data in sharedPreferences
         await StorageUtil.putString(
             localStorageData.ID, res.user.id.toString());
         StorageUtil.putString(localStorageData.NAME, res.user.name);
@@ -264,29 +268,12 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   }
 
   void _navigateFunc() {
-    //
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => const HomePage(),
       ),
     );
-    // if (selectedToggle == 4 ||
-    //     StorageUtil.getString(localStorageData.USERTYPE) == "4") {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const HomePage(),
-    //     ),
-    //   );
-    // } else {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const PurchaseScreen(),
-    //     ),
-    //   );
-    // }
   }
 
   void _getMessage(String msg) {

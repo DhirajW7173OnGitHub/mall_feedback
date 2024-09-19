@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,12 +10,14 @@ import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Attendance%20/attendance_page.dart';
 import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Loyalty%20/loyalty_page.dart';
+import 'package:mall_app/Model/mall_list_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
 import 'package:mall_app/Purchase/purchase_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Widget/drawer_widget.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
 
@@ -26,7 +29,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  MallDatum? selectedMall;
   int selectedIndex = 0;
+
+  int purchaseCount = 0;
+  int? mallId;
 
   LocationData? currentLocation;
   LatLng? userLocation;
@@ -38,8 +45,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     sessionManager.updateLastLoggedInTimeAndLoggedInStatus();
-
+    /* This is useful when you need to execute code after the UI has been laid out
+    After it Update UI*/
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      getMallData();
       globalBloc.doFetchMobileMenu(
         userId: StorageUtil.getString(localStorageData.ID),
         usertype: StorageUtil.getString(localStorageData.USERTYPE),
@@ -51,8 +60,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  getMallData() {
+    (StorageUtil.getString(localStorageData.USERTYPE) == "8")
+        ? globalBloc.doFetchMallListData()
+        : null;
+  }
+
   _getDialogForAttendance() async {
     DateTime now = DateTime.now();
+    //getting current date formated by Intl package
     String currentDate = DateFormat('yyyy-MM-dd').format(now);
     // String currentTime = DateFormat('HH:mm:ss').format(now);
     var res = await globalBloc.doFetchAttendanceDetailsData(
@@ -61,6 +77,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     log('Attendance :${res.attendance == {}}--${res.errorcode} ${res.msg}');
+    //Build Dialog on Attendance Response
     if (res.attendance != {} && res.errorcode == 1) {
       initialDialogForAttendance();
     } else {
@@ -73,6 +90,7 @@ class _HomePageState extends State<HomePage> {
   initialDialogForAttendance() async {
     showDialog(
       context: context,
+      //by barrierDismissible user can not interact with screen except Dailog button
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
@@ -131,8 +149,7 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(color: Colors.purple),
                     ),
                     onPressed: () async {
-                      print(' yes click');
-
+                      log(' yes click');
                       _showMapDialog(checkInFromMap: () {
                         _getLocationAndTime('yes');
                       });
@@ -181,11 +198,6 @@ class _HomePageState extends State<HomePage> {
 
     log('Location Latitude: ${currentLocation!.latitude} and longitude: ${currentLocation!.longitude}');
 
-    // address = await getLocation.getPlaceName(
-    //   currentLocation!.latitude!,
-    //   currentLocation!.longitude!,
-    // );
-    //log('address: $address');
     EasyLoading.dismiss();
 
     return true;
@@ -232,6 +244,7 @@ class _HomePageState extends State<HomePage> {
                   mapController = controller;
                 });
               },
+              //Set Camera position according to user location(means in target pass Lat long value)
               initialCameraPosition: CameraPosition(
                 target: userLocation!,
                 zoom: 15.0,
@@ -256,7 +269,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //Mark Attendance
+  //Mark User Attendance
   Future<void> _getLocationAndTime(String isPresent) async {
     EasyLoading.show(dismissOnTap: false);
     DateTime now = DateTime.now();
@@ -299,46 +312,46 @@ class _HomePageState extends State<HomePage> {
           preferredSize: const Size.fromHeight(80),
           child: Container(
             color: Colors.transparent,
-            child: HomePageWidget(
-              onTap: clickOnLogOut,
-            ),
+            child: const HomePageWidget(
+                //  onTap: clickOnLogOut,
+                ),
           ),
         ),
-
-        // drawer: Drawer(
-        //   child: Column(
-        //     children: [
-        //       Text(
-        //         "OK",
-        //       )
-        //     ],
-        //   ),
-        // ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   currentIndex: selectedIndex,
-        //   unselectedItemColor: const Color(0xFF757575),
-        //   selectedItemColor: Colors.purple,
-        //   onTap: (value) {
-        //     navigatorPage(value);
-        //   },
-        //   type: BottomNavigationBarType.fixed,
-        //   items: const [
-        //     BottomNavigationBarItem(
-        //       label: "Home",
-        //       icon: Icon(Icons.home),
-        //     ),
-        //     BottomNavigationBarItem(
-        //       label: "Profile",
-        //       icon: Icon(Icons.person),
-        //     ),
-        //   ],
-        // ),
+        drawer: Drawer(
+          width: 240,
+          child: DrawerWidget(
+            onTap: clickOnLogOut,
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: selectedIndex,
+          unselectedItemColor: const Color(0xFF757575),
+          selectedItemColor: Colors.purple,
+          onTap: (value) {
+            navigatorPage(value);
+          },
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              label: "Home",
+              icon: Icon(Icons.home),
+            ),
+            BottomNavigationBarItem(
+              label: "Notification",
+              icon: Icon(Icons.notifications),
+            ),
+          ],
+        ),
         body: Column(
-          //  mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 50,
+              height: 16,
             ),
+            (StorageUtil.getString(localStorageData.USERTYPE) == "8")
+                ? buildDrpdownMallListWidget()
+                : Container(),
+            const SizedBox(height: 5),
+            const SizedBox(height: 20),
             StreamBuilder<MobileMenuModel>(
               stream: globalBloc.getMobileMenu.stream,
               // || snapshot.data!.mobileMenuList.isEmpty
@@ -355,13 +368,19 @@ class _HomePageState extends State<HomePage> {
                 return Expanded(
                   child: GridView.count(
                     scrollDirection: Axis.vertical,
+                    //crossAxisCount used for how many item want horizontally
                     crossAxisCount: 2,
+                    //mainAxisSpacing means vertical spacing
                     mainAxisSpacing: 10,
+                    //crossAxisSpacing means horizontal spacing
                     crossAxisSpacing: 10,
+                    /*if the list is inside another scrollable or limited-height parent, 
+                    and you want the list to only occupy the space it needs then shrinkWrap use */
                     shrinkWrap: true,
                     children: List.generate(
                       menuItem.length,
                       (index) {
+                        //default image set here
                         String imageName = "assets/icons/place.png";
                         Color? color =
                             (menuItem[index].status.toLowerCase() == "active")
@@ -403,7 +422,7 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Expanded(
                                       flex: 70,
-                                      child: Container(
+                                      child: SizedBox(
                                         width: 80,
                                         height: 50,
                                         child: Image.asset(
@@ -426,21 +445,6 @@ class _HomePageState extends State<HomePage> {
                                             color: Colors.black,
                                           ),
                                         ),
-                                        // Container(
-                                        //   width:
-                                        //       MediaQuery.of(context).size.width *
-                                        //           1,
-                                        //   child: Text(
-                                        //     menuTitle,
-                                        //     maxLines: 3,
-                                        //     textAlign: TextAlign.center,
-                                        //     style: const TextStyle(
-                                        //       fontSize: 14.0,
-                                        //       fontWeight: FontWeight.w500,
-                                        //       color: Colors.black,
-                                        //     ),
-                                        //   ),
-                                        // ),
                                       ),
                                     ),
                                   ],
@@ -461,22 +465,131 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // void navigateToProfilePage() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const UserProfileScreen(),
-  //     ),
-  //   );
-  // }
+  Widget buildDrpdownMallListWidget() {
+    return Column(
+      children: [
+        StreamBuilder<MallListModel>(
+          stream: globalBloc.getMallListData.stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
+              return const SizedBox(
+                child: Center(
+                  child: Text("No Mall Found"),
+                ),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            //set all getting Data in mallList varible
+            var mallList = snapshot.data!.data;
 
-  // void navigatorPage(int index) {
-  //   switch (index) {
-  //     case 1:
-  //       navigateToProfilePage();
-  //       break;
-  //   }
-  // }
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: DropdownSearch<MallDatum>(
+                //dropdownDecoratorProps used in decoration of Dropdown
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    hintText: "Select Mall",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF000000)),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(6),
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.only(left: 10),
+                  ),
+                ),
+                //popupProps used in decoration of Showing data
+                popupProps: const PopupProps.menu(
+                  menuProps: MenuProps(elevation: 8),
+                  showSearchBox: true,
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Search Here",
+                      contentPadding: EdgeInsets.only(left: 10),
+                    ),
+                  ),
+                  fit: FlexFit.loose,
+                  constraints: BoxConstraints(),
+                ),
+                //All mallList Data put in items
+                items: mallList, //.map((item) => item.name).toList(),
+                //itemAsString is used for show an item in dropdown
+                itemAsString: (MallDatum item) => item.name,
+                onChanged: (MallDatum? selectedMall) async {
+                  if (selectedMall != null) {
+                    var mallKey = selectedMall.mallKey;
+                    var res = await globalBloc.doFetchPurchaseCountData(
+                      mallKey: mallKey,
+                      phone: StorageUtil.getString(localStorageData.PHONE),
+                    );
+                    setState(() {
+                      if (res["errorcode"] == 0) {
+                        purchaseCount = res["purchase_count"];
+                        mallId = selectedMall.id;
+                      } else {
+                        purchaseCount = 0;
+                        mallId = selectedMall.id;
+                      }
+                    });
+                  }
+                },
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 5),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              height: 48,
+              // width: MediaQuery.of(context).size.width * 0.5,
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Row(
+                  children: [
+                    Text(
+                      'Purchase Count :',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      purchaseCount.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void navigateToProfilePage() {}
+
+  void navigatorPage(int index) {
+    switch (index) {
+      case 1:
+        navigateToProfilePage();
+        break;
+    }
+  }
 
   void navigateFeedBackPage() async {
     Navigator.push(
@@ -497,12 +610,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   void navigatePurchasePage() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const PurchaseScreen(),
-      ),
-    );
+    if (mallId != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PurchaseScreen(mallId: mallId!),
+        ),
+      );
+    } else {
+      _getCommonCodeDialog("First Select Mall");
+    }
   }
 
   void navigateLoyaltyPage() async {
@@ -510,7 +627,6 @@ class _HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(
         builder: (context) => const LoyaltyPage(),
-        // LoyaltyPage(),
       ),
     );
   }
@@ -532,12 +648,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // _getCommonCodeDialog(String msg) {
-  //   CommonCode.commonDialogForData(
-  //     context,
-  //     msg: msg,
-  //     isBarrier: false,
-  //     second: 2,
-  //   );
-  // }
+  _getCommonCodeDialog(String msg) {
+    CommonCode.commonDialogForData(
+      context,
+      msg: msg,
+      isBarrier: false,
+      second: 2,
+    );
+  }
 }

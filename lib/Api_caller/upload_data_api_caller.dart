@@ -9,7 +9,8 @@ class UploadFileDataApiCaller {
   static late http.Client _client;
 
   //------------------------Save Feed Back---------------------//
-  Future<Map<String, dynamic>?> uploadFeedbackData(List<Map> feedback) async {
+  Future<Map<String, dynamic>?> uploadFeedbackData(
+      String userId, List<Map> feedback) async {
     _client = await getSSLPinningClient();
 
     final String uri = '$baseUrl/savefeedback';
@@ -32,6 +33,7 @@ class UploadFileDataApiCaller {
     }).toList();
 
     var bodyData = jsonEncode({
+      'userid': userId,
       'feedback': formattedFeedback,
     });
 

@@ -22,8 +22,10 @@ class _OrderItemHistoryScreenState extends State<OrderItemHistoryScreen> {
   @override
   void initState() {
     super.initState();
+    //used for update UI after UI build
     Future.delayed(const Duration(microseconds: 200), () {
       try {
+        //get All Order data from previous page and set in args
         args = ModalRoute.of(context)?.settings.arguments as Order;
         log("Geeting Order Id : ${args!.id}");
         setState(() {
@@ -49,6 +51,7 @@ class _OrderItemHistoryScreenState extends State<OrderItemHistoryScreen> {
       ),
       body: Column(
         children: [
+          //Custom Widget where display all Order Data of Previous screen
           OrderDetailsWidget(
             anniversary: (args!.anniversary.isEmpty) ? "" : args!.anniversary,
             contactNo: (args!.contactNo.isEmpty) ? "" : args!.contactNo,
@@ -75,6 +78,7 @@ class _OrderItemHistoryScreenState extends State<OrderItemHistoryScreen> {
           const SizedBox(
             height: 12,
           ),
+          //Expanded Widget used in Parent widget For acquired all remaining space
           Expanded(
             child: StreamBuilder<OrderItemHistoryModel>(
               stream: globalBloc.getItemHistory.stream,

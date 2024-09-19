@@ -51,21 +51,6 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context) => const HomePage(),
             ),
           );
-          // if (StorageUtil.getString(localStorageData.USERTYPE) == "4") {
-          //   Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const HomePage(),
-          //     ),
-          //   );
-          // } else {
-          //   Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const PurchaseScreen(),
-          //     ),
-          //   );
-          // }
 
           return;
         }

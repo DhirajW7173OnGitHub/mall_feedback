@@ -6,6 +6,8 @@ import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Api_caller/upload_data_api_caller.dart';
+import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
+import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
@@ -33,26 +35,25 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   final emailFocusNode = FocusNode();
   final commentFocusNode = FocusNode();
 
+  //used for save all FeedbackDatum data
   List<FeedbackDatum> feedbackListDattum = [];
 
   List<bool> isCheckedList = [];
-
   Map<int, dynamic> selectedRadioValues = {};
 
   int selectedSmiley = -1;
-
   bool checkInternet = false;
-
   DateTime? selectedDate;
 
   //After Selected varible and list
   int selectedStars = 0;
+
+  //used for adding selected checkbox name
   List<String> selectedCheckBox = [];
-
   List<Map<int, dynamic>> selectedRadioButton = [];
-
   String smileySelection = "";
 
+  //used for save map in which contain question Id and Answer with key and value
   Map<String, dynamic> nameTextBoxMapData = {};
   Map<String, dynamic> emailTextBoxMapData = {};
   Map<String, dynamic> mobileTextBoxMapData = {};
@@ -64,6 +65,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   Map<String, dynamic> genericTextBoxMapData = {};
   Map<String, dynamic> commentTextAreaMapData = {};
 
+  //Used to store all question's id with Answer
   List<Map> feedbackList = [];
 
   @override
@@ -79,6 +81,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     });
   }
 
+  //Send Answer in String according to select index of Smiley face
   selectEmojiFeedback(int index) {
     switch (index) {
       case 1:
@@ -104,6 +107,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   // }
 
   Widget _buildTextBox(feedbackData) {
+    //build TextFormField according inputType of feedbackData
     switch (feedbackData.inputType) {
       case "name validation":
         return Padding(
@@ -122,14 +126,18 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
             ),
             onChanged: (value) {
               setState(() {
+                //save question ID and Answer in nameTextBoxMapData
                 nameTextBoxMapData = {
                   "question_id": feedbackData.id,
                   "answers": _nameController.text
                 };
               });
+
+              // here we get index in -1 or 0 format by checking such
+              //question id exist or not in feedbackList
               int index = feedbackList.indexWhere(
                   (element) => element["question_id"] == feedbackData.id);
-
+              //According to index it add in list
               if (index != -1) {
                 feedbackList[index] = nameTextBoxMapData;
               } else {
@@ -320,25 +328,30 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
 
   Widget _buildCheckboxList(feedbackData) {
     return Column(
+      //construct Widget according getting data in key and value form
       children: feedbackData.options.asMap().entries.map<Widget>((entry) {
         int optionIndex = entry.key;
         var option = entry.value;
         return CheckboxListTile(
           title: Text(option.optionText),
+          //used bool list where check box check or not according their index
           value: isCheckedList[optionIndex],
           activeColor: Colors.purple,
           onChanged: (bool? value) {
             setState(() {
               isCheckedList[optionIndex] = value!;
               if (value) {
+                //value is true then add optionText in selectedCheckBox list
                 selectedCheckBox.add(option.optionText);
               } else {
+                //value is false then remove optionText from selectedCheckBox list
                 selectedCheckBox.remove(option.optionText);
               }
 
               checkBoxMapData = {
                 "question_id": feedbackData.id,
-                "answers": selectedCheckBox
+                "answers":
+                    selectedCheckBox //this selectedCheckBox take as answer
               };
               int index = feedbackList.indexWhere(
                   (element) => element["question_id"] == feedbackData.id);
@@ -404,6 +417,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         return IconButton(
           iconSize: 32,
           icon: Icon(
+            //everyTime starIndex check with selectedStars
             starIndex < selectedStars ? Icons.star : Icons.star_border,
           ),
           color: starIndex < selectedStars ? Colors.purple : Colors.grey,
@@ -431,6 +445,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   }
 
   Widget _buildSmileyRating(feedbackData) {
+    //flutter_emoji_feedback package gives 6 different Emoji for feedback
     return EmojiFeedback(
       elementSize: 40,
       labelTextStyle: Theme.of(context)
@@ -585,26 +600,36 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     log('Internet $checkInternet');
     if (checkInternet) {
       EasyLoading.show(dismissOnTap: false);
+
+      //here save all questions Id in integer list availableAllId
       List<int> availableAllId = feedbackListDattum
           .map((item) => int.parse(item.id.toString()))
           .toList();
 
+      //Here Also Save All Answer questions id in questionIdFromFeedback
       List<int> questionIdFromFeedback =
           feedbackList.map((item) => item["question_id"] as int).toList();
 
       var data = [];
+
+      //Here check availableAllId is present or not in questionIdFromFeedback
+      //if some availableAllId not exist in questionIdFromFeedback then such ID
+      //save in data List
       for (var availableId in availableAllId) {
         if (!questionIdFromFeedback.contains(availableId)) {
           data.add(availableId);
         }
       }
+
+      //final Check Data list Is Empty or not
       if (data.isNotEmpty) {
         EasyLoading.dismiss();
+        //if data list not empty then showDialog of question which present at index 0
         var question = getNotAnswerQuestionName(data.first);
         _getMessage("Fill : $question", 4);
       } else {
-        var res =
-            await UploadFileDataApiCaller().uploadFeedbackData(feedbackList);
+        var res = await UploadFileDataApiCaller().uploadFeedbackData(
+            StorageUtil.getString(localStorageData.ID), feedbackList);
         EasyLoading.dismiss();
         if (res!["errorcode"] == 0) {
           finalSubmitDialog(msg: res["message"]);
@@ -618,6 +643,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   }
 
   String getNotAnswerQuestionName(int id) {
+    //here check getting Id and id which is from feedbackListDattum
+    //list is equal or not if it get equal then return questions w.r.t that id
     var item = feedbackListDattum.firstWhere(
       (item) => item.id == id,
     );

@@ -46,25 +46,26 @@ class OrderDetailsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Store ID :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  storeId,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Store ID :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       storeId,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -88,7 +89,7 @@ class OrderDetailsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Receipt No :",
+                  "Invoice No :",
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -107,7 +108,7 @@ class OrderDetailsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Receipt Date :",
+                  "Invoice Date :",
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -179,139 +180,141 @@ class OrderDetailsWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Return Amount :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  returnAmount,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Return Tax :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  returnTax,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Customer Name :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  custName,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Contact Number :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  contactNo,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Email ID :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  email,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Date Of Birth :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  dob,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Anniversary :",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  anniversary,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Return Amount :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       returnAmount,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Return Tax :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       returnTax,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Customer Name :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       custName,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Contact Number :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       contactNo,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Email ID :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       email,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Date Of Birth :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       dob,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "Anniversary :",
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.bold),
+            //     ),
+            //     Text(
+            //       anniversary,
+            //       style: Theme.of(context)
+            //           .textTheme
+            //           .bodyLarge!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

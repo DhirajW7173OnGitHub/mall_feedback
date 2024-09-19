@@ -5,10 +5,10 @@ import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 class HomePageWidget extends StatelessWidget {
   const HomePageWidget({
     super.key,
-    required this.onTap,
+    // required this.onTap,
   });
 
-  final Function() onTap;
+  // final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,20 @@ class HomePageWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          IconButton(
+            onPressed: () {
+              //this code allow to open Drawer
+              Scaffold.of(context).openDrawer();
+            },
+            icon: const Icon(Icons.menu),
+          ),
           CircleAvatar(
             maxRadius: 40,
             child: Image.asset("assets/images/person.png"),
           ),
-          const SizedBox(
-            width: 10,
-          ),
+          // const SizedBox(
+          //   width: 10,
+          // ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,23 +42,16 @@ class HomePageWidget extends StatelessWidget {
                     color: Colors.purple,
                     fontSize: 26),
               ),
-              // Text(
-              //   StorageUtil.getString(localStorageData.PHONE),
-              //   style: Theme.of(context)
-              //       .textTheme
-              //       .bodyLarge!
-              //       .copyWith(fontWeight: FontWeight.w500),
-              // ),
             ],
           ),
-          const Spacer(),
-          IconButton(
-            onPressed: onTap,
-            icon: const Icon(
-              Icons.logout,
-              color: Colors.purple,
-            ),
-          ),
+          // const Spacer(),
+          // IconButton(
+          //   onPressed: onTap,
+          //   icon: const Icon(
+          //     Icons.logout,
+          //     color: Colors.purple,
+          //   ),
+          // ),
         ],
       ),
     );

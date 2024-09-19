@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Api_caller/api_caller.dart';
 import 'package:mall_app/Attendance%20/Model/attendance_details_model.dart';
 import 'package:mall_app/Model/login_user_model.dart';
+import 'package:mall_app/Model/mall_list_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_history_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_item_history_model.dart';
@@ -269,7 +270,7 @@ class GlobalBloc {
 
     try {
       Map<String, dynamic> res = await _apiCaller.getOrderHistoryData(bodyData);
-      log("doFetchOrderHistoryData BodyData : $bodyData ---Response : $res");
+      log("doFetchOrderHistoryData BodyData : $bodyData ---Response : res");
       var data = OrderHistoryModel.fromJson(res);
       _liveOrderHistory.add(data);
       EasyLoading.dismiss();
@@ -328,6 +329,46 @@ class GlobalBloc {
     } catch (e) {
       EasyLoading.dismiss();
       log("doFetchPurchaseHistoryData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Mall List Data ----------------//
+  BehaviorSubject<MallListModel> get getMallListData => _liveMallListData;
+  final BehaviorSubject<MallListModel> _liveMallListData =
+      BehaviorSubject<MallListModel>();
+
+  Future<MallListModel> doFetchMallListData() async {
+    EasyLoading.show(dismissOnTap: false);
+
+    try {
+      Map<String, dynamic> res = await _apiCaller.getMallListData();
+      log("doFetchMallListData BodyData Response : $res");
+      var data = MallListModel.fromJson(res);
+
+      _liveMallListData.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      log("doFetchMallListData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Purchase Count According Mall----------------//
+  Future<Map> doFetchPurchaseCountData({String? phone, String? mallKey}) async {
+    EasyLoading.show(dismissOnTap: false);
+
+    Map bodyData = {"mall_key": mallKey, "phone": phone};
+
+    try {
+      var res = await _apiCaller.getPurchaseCount(bodyData);
+      log("doFetchPurchaseCountData BodyData : $bodyData Response : $res");
+
+      EasyLoading.dismiss();
+      return res;
+    } catch (e) {
+      log("doFetchPurchaseCountData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }

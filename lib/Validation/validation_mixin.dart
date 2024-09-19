@@ -1,4 +1,5 @@
 mixin ValidationMixin {
+  //validation for Mobile digit
   String? phoneValidation(String? value) {
     if (value == null || value.isEmpty) {
       return "Enter Mobile Number";
@@ -47,11 +48,6 @@ mixin ValidationMixin {
     if (value == null || value.isEmpty) {
       return "Enter First name";
     }
-    // String trimmedValue = value.trim();
-
-    // if (value != trimmedValue) {
-    //   return "Space not allowed";
-    // }
 
     return null;
   }

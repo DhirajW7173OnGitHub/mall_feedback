@@ -136,4 +136,30 @@ class ApiCaller {
       throw "getPurchaseHistoryData Something Went Wrong $e";
     }
   }
+
+  //----------------Mall List API----------------//
+  Future<Map<String, dynamic>> getMallListData() async {
+    var endPoint = "mall-list";
+    try {
+      final res = await ApiWrapper.get(endPoint);
+      print("getMallListData body Data Response : $res");
+      return res;
+    } catch (e) {
+      print('getMallListData Error: $e');
+      throw "getMallListData Something Went Wrong $e";
+    }
+  }
+
+  //----------------Purchase Count API----------------//
+  Future<Map> getPurchaseCount(Map body) async {
+    var endPoint = "purchase-count";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      print("getPurchaseCount body Data : $body --Response : $res");
+      return res;
+    } catch (e) {
+      print('getPurchaseCount Error: $e');
+      throw "getPurchaseCount Something Went Wrong $e";
+    }
+  }
 }
