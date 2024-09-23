@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Environment/environment.dart';
 import 'package:mall_app/Initial%20Pages/splash_page.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/global_utils.dart';
+
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,10 +18,18 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
+  Environment().initConfig(environment);
+
+  //Firebase Initialization
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  //this code of line use for Dialog of Notitfication Permission
+  await FirebaseMessaging.instance.requestPermission();
+
   //Initial instance of SharedPreference
   await StorageUtil.getInstance();
-
-  Environment().initConfig(environment);
 
   runApp(
     const MyApp(),

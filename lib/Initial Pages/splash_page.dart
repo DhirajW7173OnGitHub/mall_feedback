@@ -51,7 +51,6 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context) => const HomePage(),
             ),
           );
-
           return;
         }
       }

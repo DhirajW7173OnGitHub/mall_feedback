@@ -51,6 +51,7 @@ dependencies:
   package_info_plus: ^5.0.1
   toggle_switch: ^2.3.0
   dropdown_search: ^5.0.5
+  firebase_core: ^2.27.0
   
 
 dev_dependencies:

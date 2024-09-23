@@ -12,23 +12,22 @@ import 'package:mall_app/Utils/common_code.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
 
-class FeedBackScreen extends StatefulWidget {
-  const FeedBackScreen({super.key});
+class DummyFeedBackPage extends StatefulWidget {
+  const DummyFeedBackPage({super.key});
 
   @override
-  State<FeedBackScreen> createState() => _FeedBackScreenState();
+  State<DummyFeedBackPage> createState() => _DummyFeedBackPageState();
 }
 
-class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
+class _DummyFeedBackPageState extends State<DummyFeedBackPage>
+    with ValidationMixin {
   final _mobileFormKey = GlobalKey<FormState>();
-  final newMobileFormKey = GlobalKey<FormState>();
   final _emailFormKey = GlobalKey<FormState>();
 //  final _commentFormKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
   final ageController = TextEditingController();
   final mobileController = TextEditingController();
-  final newMobileController = TextEditingController();
   final emailController = TextEditingController();
   final commentController = TextEditingController();
 
@@ -36,6 +35,10 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   final nameFocusNode = FocusNode();
   final emailFocusNode = FocusNode();
   final commentFocusNode = FocusNode();
+
+  int currentQuestionIndex = 0; // Track the current question index
+  bool isNextButtonVisible = false; // To show or hide the "Next" button
+  //List<bool> isCheckedList = [];
 
   //used for save all FeedbackDatum data
   List<FeedbackDatum> feedbackListDattum = [];
@@ -49,9 +52,6 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
 
   //After Selected varible and list
   int selectedStars = 0;
-
-  //for mobile Text Field
-  bool isTextFieldVisible = false;
 
   //used for adding selected checkbox name
   List<String> selectedCheckBox = [];
@@ -101,6 +101,15 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         return "Awesome";
     }
   }
+
+  // bool isIntValue(String value) {
+  //   try {
+  //     int.parse(value);
+  //     return true;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
 
   Widget _buildTextBox(feedbackData) {
     //build TextFormField according inputType of feedbackData
@@ -290,6 +299,11 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         controller: commentController,
         focusNode: commentFocusNode,
         maxLines: 6,
+        // inputFormatters: [
+        //   FilteringTextInputFormatter.allow(
+        //     RegExp(r'[a-zA-Z\s,.\?]'),
+        //   ),
+        // ],
         keyboardType: TextInputType.multiline,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
@@ -310,6 +324,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
           } else {
             feedbackList.add(commentTextAreaMapData);
           }
+
           log('Name Text BOx Data:$feedbackList');
         },
       ),
@@ -361,137 +376,43 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   }
 
   Widget _buildRadioButtonList(feedbackData, int questionIndex) {
-    switch (feedbackData.inputType) {
-      case "mobile number":
-        return Column(
-          children: [
-            Column(
-              children:
-                  feedbackData.options.asMap().entries.map<Widget>((entry) {
-                int optionIndex = entry.key;
-                var option = entry.value;
+    return Column(
+      children: feedbackData.options.asMap().entries.map<Widget>((entry) {
+        int optionIndex = entry.key;
+        var option = entry.value;
+        return RadioListTile(
+          title: Text(option.optionText),
+          value: option.id,
+          groupValue: selectedRadioValues[feedbackData.id],
+          onChanged: (dynamic value) {
+            setState(() {
+              selectedRadioValues[feedbackData.id] = value;
 
-                return Column(
-                  children: [
-                    RadioListTile(
-                      title: Text(option.optionText),
-                      value: option.id,
-                      groupValue: selectedRadioValues[feedbackData.id],
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          // Update the selected radio value for the current question
-                          selectedRadioValues[feedbackData.id] = value;
+              selectedRadioButton.removeWhere(
+                  (element) => element.containsKey(feedbackData.id));
 
-                          // Remove any previous answer for this question
-                          selectedRadioButton.removeWhere((element) =>
-                              element.containsKey(feedbackData.id));
+              // Add the new selection to the selectedRadioButton list
+              selectedRadioButton.add({feedbackData.id: option.optionText});
 
-                          // Add the new selection to the selectedRadioButton list
-                          selectedRadioButton
-                              .add({feedbackData.id: option.optionText});
+              radioButtonMapData = {
+                "question_id": feedbackData.id,
+                "answers": option.optionText
+              };
+            });
 
-                          // Check if the selected option is "Yes" to show the TextFormField
-                          if (option.optionText.toString().toLowerCase() ==
-                              "yes") {
-                            isTextFieldVisible = true;
-                            // Prepare the data to add to feedbackList
-                            radioButtonMapData = {
-                              "question_id": feedbackData.id,
-                              "answers":
-                                  " ${option.optionText} - ${mobileController.text}"
-                            };
-                          } else {
-                            isTextFieldVisible = false;
-                            // Prepare the data to add to feedbackList
-                            radioButtonMapData = {
-                              "question_id": feedbackData.id,
-                              "answers": option.optionText
-                            };
-                          }
+            int index = feedbackList.indexWhere(
+                (element) => element["question_id"] == feedbackData.id);
 
-                          // Find if the question already exists in feedbackList
-                          int index = feedbackList.indexWhere((element) =>
-                              element["question_id"] == feedbackData.id);
-
-                          // Update or add the answer in the feedback list
-                          if (index != -1) {
-                            feedbackList[index] = radioButtonMapData;
-                          } else {
-                            feedbackList.add(radioButtonMapData);
-                          }
-                        });
-
-                        log('Selected Radio Button for Question ID $selectedRadioButton');
-                      },
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
-            isTextFieldVisible
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Form(
-                      key: newMobileFormKey,
-                      child: TextFormField(
-                        controller: newMobileController,
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          labelText: 'Enter mobile number',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.only(left: 10),
-                        ),
-                        validator: phoneValidation,
-                        onChanged: (value) {
-                          newMobileFormKey.currentState!.validate();
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  )
-                : Container(),
-          ],
+            if (index != -1) {
+              feedbackList[index] = radioButtonMapData;
+            } else {
+              feedbackList.add(radioButtonMapData);
+            }
+            log('Selected Radio Button for Question ID $selectedRadioButton');
+          },
         );
-
-      default:
-        return Column(
-          children: feedbackData.options.asMap().entries.map<Widget>((entry) {
-            //  int optionIndex = entry.key;
-            var option = entry.value;
-            return RadioListTile(
-              title: Text(option.optionText),
-              value: option.id,
-              groupValue: selectedRadioValues[feedbackData.id],
-              onChanged: (dynamic value) {
-                setState(() {
-                  selectedRadioValues[feedbackData.id] = value;
-
-                  selectedRadioButton.removeWhere(
-                      (element) => element.containsKey(feedbackData.id));
-
-                  // Add the new selection to the selectedRadioButton list
-                  selectedRadioButton.add({feedbackData.id: option.optionText});
-
-                  radioButtonMapData = {
-                    "question_id": feedbackData.id,
-                    "answers": option.optionText
-                  };
-                });
-
-                int index = feedbackList.indexWhere(
-                    (element) => element["question_id"] == feedbackData.id);
-
-                if (index != -1) {
-                  feedbackList[index] = radioButtonMapData;
-                } else {
-                  feedbackList.add(radioButtonMapData);
-                }
-                log('Selected Radio Button for Question ID $selectedRadioButton');
-              },
-            );
-          }).toList(),
-        );
-    }
+      }).toList(),
+    );
   }
 
   Widget _buildStarRating(feedbackData) {
@@ -557,6 +478,17 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     );
   }
 
+  void goToNextQuestion() {
+    if (currentQuestionIndex < feedbackListDattum.length - 1) {
+      setState(() {
+        currentQuestionIndex++;
+      });
+    } else {
+      // You can handle the case when all questions are answered, like submitting the form
+      print('All questions answered');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -577,101 +509,76 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
               child: const Text('CANCEL'),
             ),
             ElevatedButton(
-              onPressed: clickOnSubmitButton,
-              child: const Text('SUBMIT'),
+              onPressed: goToNextQuestion,
+              child: currentQuestionIndex < feedbackListDattum.length - 1
+                  ? const Text('NEXT')
+                  : const Text('SUBMIT'),
             ),
           ],
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            StreamBuilder<FeedbackModel>(
-              stream: globalBloc.getFeedbackQueData.stream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text("No Data"),
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.data.length,
-                    itemBuilder: (context, index) {
-                      var feedbackData = snapshot.data!.data[index];
-
-                      // Initialize the isCheckedList based on the number of options for Checkbox type
-                      if (feedbackData.answerType == 'Checkbox' &&
-                          isCheckedList.length != feedbackData.options.length) {
-                        isCheckedList = List<bool>.filled(
-                            feedbackData.options.length, false);
-                      }
-
-                      // Initialize answerWidget to a default widget
-                      Widget answerWidget = const SizedBox.shrink();
-
-                      // Check the type of question and create the appropriate input widget
-                      switch (feedbackData.answerType) {
-                        case 'TextBox':
-                          answerWidget = _buildTextBox(feedbackData);
-                          break;
-                        case 'Textarea':
-                          answerWidget = _buildTextAreaBox(feedbackData);
-                          break;
-                        case 'Checkbox':
-                          answerWidget = _buildCheckboxList(feedbackData);
-                          break;
-                        case 'Radio Button':
-                          answerWidget =
-                              _buildRadioButtonList(feedbackData, index);
-                          break;
-                        case 'Stars':
-                          answerWidget = _buildStarRating(feedbackData);
-                          break;
-                        case 'Smiley':
-                          answerWidget = _buildSmileyRating(feedbackData);
-                          break;
-                        default:
-                          answerWidget = const SizedBox.shrink();
-                      }
-
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    feedbackData.questions,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                ),
-                                // Add the input widget below the question
-                                answerWidget,
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          ),
-                          const Divider(),
-                        ],
-                      );
-                    },
+            // Assuming that feedbackListDattum is already filled with the questions
+            if (feedbackListDattum.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      feedbackListDattum[currentQuestionIndex].questions,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                );
-              },
-            ),
+                  const SizedBox(height: 20),
+                  // Display the answer widget for the current question
+                  _buildAnswerWidget(feedbackListDattum[currentQuestionIndex]),
+                  const SizedBox(height: 10),
+                ],
+              )
+
+            // Expanded(
+            //   child: ListView(
+            //     shrinkWrap: true,
+            //     children: [
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 10, vertical: 4),
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Padding(
+            //               padding: const EdgeInsets.only(left: 10),
+            //               child: Text(
+            //                 feedbackListDattum[currentQuestionIndex]
+            //                     .questions,
+            //                 style: Theme.of(context)
+            //                     .textTheme
+            //                     .bodyLarge!
+            //                     .copyWith(fontWeight: FontWeight.bold),
+            //               ),
+            //             ),
+            //             const SizedBox(height: 10),
+            //             // Display the answer widget for the current question
+            //             _buildAnswerWidget(
+            //                 feedbackListDattum[currentQuestionIndex]),
+            //             const SizedBox(height: 10),
+            //           ],
+            //         ),
+
+            //       ),
+            //       const Divider(),
+            //     ],
+            //   ),
+            // )
+            else
+              const Center(
+                child: Text("No Questions Available"),
+              ),
             const SizedBox(
               height: 80,
             ),
@@ -679,6 +586,36 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         ),
       ),
     );
+  }
+
+  Widget _buildAnswerWidget(FeedbackDatum feedbackData) {
+    Widget answerWidget = const SizedBox.shrink();
+
+    switch (feedbackData.answerType) {
+      case 'TextBox':
+        answerWidget = _buildTextBox(feedbackData);
+        break;
+      case 'Textarea':
+        answerWidget = _buildTextAreaBox(feedbackData);
+        break;
+      case 'Checkbox':
+        answerWidget = _buildCheckboxList(feedbackData);
+        break;
+      case 'Radio Button':
+        answerWidget =
+            _buildRadioButtonList(feedbackData, currentQuestionIndex);
+        break;
+      case 'Stars':
+        answerWidget = _buildStarRating(feedbackData);
+        break;
+      case 'Smiley':
+        answerWidget = _buildSmileyRating(feedbackData);
+        break;
+      default:
+        answerWidget = const SizedBox.shrink();
+    }
+
+    return answerWidget;
   }
 
   void clickOnSubmitButton() async {
@@ -835,54 +772,3 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     );
   }
 }
-
-
-
-
- // return Column(
-    //   children: feedbackData.options.asMap().entries.map<Widget>((entry) {
-    //     int optionIndex = entry.key;
-    //     var option = entry.value;
-    //     return RadioListTile(
-    //       title: Text(option.optionText),
-    //       value: option.id,
-    //       groupValue: selectedRadioValues[feedbackData.id],
-    //       onChanged: (dynamic value) {
-    //         setState(() {
-    //           selectedRadioValues[feedbackData.id] = value;
-
-    //           selectedRadioButton.removeWhere(
-    //               (element) => element.containsKey(feedbackData.id));
-
-    //           // Add the new selection to the selectedRadioButton list
-    //           selectedRadioButton.add({feedbackData.id: option.optionText});
-
-    //           radioButtonMapData = {
-    //             "question_id": feedbackData.id,
-    //             "answers": option.optionText
-    //           };
-    //         });
-
-    //         int index = feedbackList.indexWhere(
-    //             (element) => element["question_id"] == feedbackData.id);
-
-    //         if (index != -1) {
-    //           feedbackList[index] = radioButtonMapData;
-    //         } else {
-    //           feedbackList.add(radioButtonMapData);
-    //         }
-    //         log('Selected Radio Button for Question ID $selectedRadioButton');
-    //       },
-    //     );
-    //   }).toList(),
-    // );
-
-
-
-
-
-
-
-
-
-
