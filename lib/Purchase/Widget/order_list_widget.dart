@@ -9,6 +9,7 @@ class OrderListWidget extends StatelessWidget {
     required this.receiptDate,
     required this.storeId,
     required this.storeName,
+    required this.invoiceNu,
     required this.onTap,
   });
 
@@ -18,6 +19,7 @@ class OrderListWidget extends StatelessWidget {
   final String customerName;
   final String phone;
   final String paymentMode;
+  final String invoiceNu;
   final Function() onTap;
 
   @override
@@ -59,12 +61,41 @@ class OrderListWidget extends StatelessWidget {
                         .bodyLarge!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
+                  Container(
+                    child: Text(
+                      storeName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    storeName,
+                    "Invoice Number :-",
                     style: Theme.of(context)
                         .textTheme
-                        .bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w500),
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: Text(
+                      invoiceNu,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
                   )
                 ],
               ),
@@ -128,6 +159,7 @@ class OrderListWidget extends StatelessWidget {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Payment Mode :-",
@@ -136,12 +168,17 @@ class OrderListWidget extends StatelessWidget {
                         .bodyLarge!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    paymentMode,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w500),
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: Text(
+                      paymentMode,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
                   )
                 ],
               ),

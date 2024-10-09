@@ -28,6 +28,7 @@ class ItemHistoryWidget extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Item Name :-",
@@ -39,6 +40,8 @@ class ItemHistoryWidget extends StatelessWidget {
                 Flexible(
                   child: Text(
                     itemName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!

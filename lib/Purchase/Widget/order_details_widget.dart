@@ -87,6 +87,7 @@ class OrderDetailsWidget extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Invoice No :",
@@ -95,12 +96,18 @@ class OrderDetailsWidget extends StatelessWidget {
                       .bodyLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  receiptNo,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.w400),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    receiptNo,
+                    maxLines: 2,
+                    //textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w400),
+                  ),
                 ),
               ],
             ),

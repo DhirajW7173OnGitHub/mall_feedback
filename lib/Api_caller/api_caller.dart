@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:mall_app/Api_caller/api_wrapper.dart';
+import 'package:mall_app/Utils/common_log.dart';
 
 class ApiCaller {
   static late http.Client _client;
@@ -10,10 +11,11 @@ class ApiCaller {
 
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("userSignUpWithData body Data : $body -- Response : $res");
+      Logger.dataPrint(
+          "userSignUpWithData body Data : $body -- Response : $res");
       return res;
     } catch (e) {
-      print('userSignUpWithData Error : $e');
+      Logger.dataPrint('userSignUpWithData Error : $e');
       throw "Something went Wrong : $e";
     }
   }
@@ -23,10 +25,10 @@ class ApiCaller {
     var endPoint = "userlogin";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("userLogincall body Data : $body -- Response : $res");
+      Logger.dataPrint("userLogincall body Data : $body -- Response : $res");
       return res;
     } catch (e) {
-      print('userLogincall Error : $e');
+      Logger.dataPrint('userLogincall Error : $e');
       throw "Something went Wrong : $e";
     }
   }
@@ -36,10 +38,11 @@ class ApiCaller {
     var endPoint = "mark-attendance";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print('markUserAttendance Body Data : $body --Response : $res');
+      Logger.dataPrint(
+          'markUserAttendance Body Data : $body --Response : $res');
       return res;
     } catch (e) {
-      print('markUserAttendance Error : $e');
+      Logger.dataPrint('markUserAttendance Error : $e');
       throw "Something went Wrong : $e";
     }
   }
@@ -49,10 +52,11 @@ class ApiCaller {
     var endPoint = "end-attendance";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print('endMarkUserAttendance Body Data : $body --Response : $res');
+      Logger.dataPrint(
+          'endMarkUserAttendance Body Data : $body --Response : $res');
       return res;
     } catch (e) {
-      print('endMarkUserAttendance Error : $e');
+      Logger.dataPrint('endMarkUserAttendance Error : $e');
       throw "Something went Wrong : $e";
     }
   }
@@ -62,10 +66,11 @@ class ApiCaller {
     var endPoint = "get-mobile-menu";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("getMobileMenuData Body Data : $body -- Response : $res");
+      Logger.dataPrint(
+          "getMobileMenuData Body Data : $body -- Response : $res");
       return res;
     } catch (e) {
-      print('getMobileMenuData Error : $e');
+      Logger.dataPrint('getMobileMenuData Error : $e');
       throw "Something went Wrong : $e";
     }
   }
@@ -76,10 +81,10 @@ class ApiCaller {
 
     try {
       final res = await ApiWrapper.get(endPoint);
-      print('getDataOfFeedBack Response : $res');
+      Logger.dataPrint('getDataOfFeedBack Response : $res');
       return res;
     } catch (e) {
-      print('getDataOfFeedBack Error : $e');
+      Logger.dataPrint('getDataOfFeedBack Error : $e');
       throw "Something went Wrong : $e";
     }
   }
@@ -90,10 +95,11 @@ class ApiCaller {
 
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("getUserAttendanceDetails body Data : $body --Response : $res");
+      Logger.dataPrint(
+          "getUserAttendanceDetails body Data : $body --Response : $res");
       return res;
     } catch (e) {
-      print('uploadFeedbackData Error: $e');
+      Logger.dataPrint('uploadFeedbackData Error: $e');
       throw "Something Went Wrong $e";
     }
   }
@@ -103,10 +109,10 @@ class ApiCaller {
     var endPoint = "orders-history";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("getOrderHistoryData body Data : $body --Response : $res");
+      // log("getOrderHistoryData body Data : $body --Response : $res");
       return res;
     } catch (e) {
-      print('getOrderHistoryData Error: $e');
+      Logger.dataPrint('getOrderHistoryData Error: $e');
       throw "getOrderHistoryData Something Went Wrong $e";
     }
   }
@@ -116,10 +122,11 @@ class ApiCaller {
     var endPoint = "item-history";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("getItemHistoryData body Data : $body --Response : $res");
+      Logger.dataPrint(
+          "getItemHistoryData body Data : $body --Response : $res");
       return res;
     } catch (e) {
-      print('getItemHistoryData Error: $e');
+      Logger.dataPrint('getItemHistoryData Error: $e');
       throw "getItemHistoryData Something Went Wrong $e";
     }
   }
@@ -129,10 +136,11 @@ class ApiCaller {
     var endPoint = "savePurchaseHistory";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("getPurchaseHistoryData body Data : $body --Response : $res");
+      Logger.dataPrint(
+          "getPurchaseHistoryData body Data : $body --Response : $res");
       return res;
     } catch (e) {
-      print('getPurchaseHistoryData Error: $e');
+      Logger.dataPrint('getPurchaseHistoryData Error: $e');
       throw "getPurchaseHistoryData Something Went Wrong $e";
     }
   }
@@ -142,10 +150,10 @@ class ApiCaller {
     var endPoint = "mall-list";
     try {
       final res = await ApiWrapper.get(endPoint);
-      print("getMallListData body Data Response : $res");
+      Logger.dataPrint("getMallListData body Data Response : $res");
       return res;
     } catch (e) {
-      print('getMallListData Error: $e');
+      Logger.dataPrint('getMallListData Error: $e');
       throw "getMallListData Something Went Wrong $e";
     }
   }
@@ -155,11 +163,60 @@ class ApiCaller {
     var endPoint = "purchase-count";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      print("getPurchaseCount body Data : $body --Response : $res");
+      Logger.dataPrint("getPurchaseCount body Data : $body --Response : $res");
       return res;
     } catch (e) {
-      print('getPurchaseCount Error: $e');
+      Logger.dataPrint('getPurchaseCount Error: $e');
       throw "getPurchaseCount Something Went Wrong $e";
+    }
+  }
+
+  //----------------Store List API----------------//
+  Future<Map<String, dynamic>> getStoreListData(Map body) async {
+    var endPoint = "store-list";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      Logger.dataPrint("getStoreListData body Data : $body --Response : $res");
+      return res;
+    } catch (e) {
+      throw "getStoreListData Something Went Wrong $e";
+    }
+  }
+
+  //----------------Sub-Category List API----------------//
+  Future<Map<String, dynamic>> getSubCategoryListData(Map body) async {
+    var endPoint = "sub-category-list";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      Logger.dataPrint(
+          "getSubCategoryListData body Data : $body --Response : $res");
+      return res;
+    } catch (e) {
+      throw "getSubCategoryListData Something Went Wrong $e";
+    }
+  }
+
+  //----------------Category List API----------------//
+  Future<Map<String, dynamic>> getCategoryListData() async {
+    var endPoint = "category-list";
+    try {
+      final res = await ApiWrapper.get(endPoint);
+      Logger.dataPrint("getCategoryListData Response : $res");
+      return res;
+    } catch (e) {
+      throw "getCategoryListData Something Went Wrong $e";
+    }
+  }
+
+  //----------------Category List API----------------//
+  Future<Map<String, dynamic>> getProductListData(Map body) async {
+    var endPoint = "product-list";
+    try {
+      final res = await ApiWrapper.post(endPoint, body);
+      Logger.dataPrint("getProductListData Response : $res");
+      return res;
+    } catch (e) {
+      throw "getProductListData Something Went Wrong $e";
     }
   }
 }

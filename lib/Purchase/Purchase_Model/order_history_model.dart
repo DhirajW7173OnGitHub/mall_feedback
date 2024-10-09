@@ -12,7 +12,10 @@ String orderHistoryModelToJson(OrderHistoryModel data) =>
 
 class OrderHistoryModel {
   int errorcode;
-  int totalRecords;
+  String totalRecords;
+  String totalInvoiceAmount;
+  String totalLoylityPoints;
+  String availablePoint;
   String msg;
   List<Order> orders;
 
@@ -20,18 +23,30 @@ class OrderHistoryModel {
     required this.errorcode,
     required this.totalRecords,
     required this.msg,
+    required this.totalInvoiceAmount,
+    required this.totalLoylityPoints,
     required this.orders,
+    required this.availablePoint,
   });
 
   factory OrderHistoryModel.fromJson(Map<String, dynamic> json) =>
       OrderHistoryModel(
         errorcode: json["errorcode"],
         totalRecords: (["", null, false, 0].contains(json["totalRecords"]))
-            ? 0
+            ? ""
             : json["totalRecords"],
         msg: (["", null, false, 0].contains(json["message"]))
             ? ""
             : json["message"],
+        totalInvoiceAmount:
+            (["", null, false, 0].contains(json["totalInvoiceAmount"]))
+                ? ""
+                : json["totalInvoiceAmount"],
+        totalLoylityPoints:
+            (["", null, false, 0].contains(json["totalLoyalityPoints"]))
+                ? ""
+                : json["totalLoyalityPoints"],
+        availablePoint: json["available_points"] ?? "",
         orders: (json["orders"] == null || json["orders"] == [])
             ? []
             : List<Order>.from(json["orders"].map((x) => Order.fromJson(x))),
@@ -41,6 +56,9 @@ class OrderHistoryModel {
         "errorcode": errorcode,
         "totalRecords": totalRecords,
         "message": msg,
+        "totalInvoiceAmount": totalInvoiceAmount,
+        "totalLoyalityPoints": totalLoylityPoints,
+        "available_points": availablePoint,
         "orders": List<dynamic>.from(orders.map((x) => x.toJson())),
       };
 }

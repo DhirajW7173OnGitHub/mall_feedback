@@ -540,43 +540,43 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
-        const SizedBox(height: 5),
-        Padding(
-          padding: const EdgeInsets.only(left: 12, right: 12),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              height: 48,
-              // width: MediaQuery.of(context).size.width * 0.5,
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: Row(
-                  children: [
-                    Text(
-                      'Purchase Count :',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.w400),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      purchaseCount.toString(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        // const SizedBox(height: 5),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 12, right: 12),
+        //   child: Align(
+        //     alignment: Alignment.centerLeft,
+        //     child: Container(
+        //       height: 48,
+        //       // width: MediaQuery.of(context).size.width * 0.5,
+        //       decoration: BoxDecoration(
+        //         border: Border.all(),
+        //         borderRadius: BorderRadius.circular(6),
+        //       ),
+        //       child: Padding(
+        //         padding: const EdgeInsets.only(left: 12),
+        //         child: Row(
+        //           children: [
+        //             Text(
+        //               'Purchase Count :',
+        //               style: Theme.of(context)
+        //                   .textTheme
+        //                   .bodyLarge!
+        //                   .copyWith(fontWeight: FontWeight.w400),
+        //             ),
+        //             const SizedBox(width: 10),
+        //             Text(
+        //               purchaseCount.toString(),
+        //               style: Theme.of(context)
+        //                   .textTheme
+        //                   .bodyLarge!
+        //                   .copyWith(fontWeight: FontWeight.w400),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

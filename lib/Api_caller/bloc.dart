@@ -1,13 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Api_caller/api_caller.dart';
 import 'package:mall_app/Attendance%20/Model/attendance_details_model.dart';
 import 'package:mall_app/Model/login_user_model.dart';
 import 'package:mall_app/Model/mall_list_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/category_list_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_history_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_item_history_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/product_list_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/store_list_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/subcategory_model.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -36,11 +39,11 @@ class GlobalBloc {
 
     try {
       var res = await _apiCaller.userSignUpWithData(bodyData);
-      log("doUserSignUp Body Data : $bodyData---> RESPONSE: $res ");
+      Logger.dataLog("doUserSignUp Body Data : $bodyData---> RESPONSE: $res ");
       EasyLoading.dismiss();
       return res;
     } catch (e) {
-      log("doUserSignUp Error : $e");
+      Logger.dataLog("doUserSignUp Error : $e");
       throw "Something went wrong in doUserSignUp: $e";
     }
   }
@@ -63,13 +66,13 @@ class GlobalBloc {
     };
     try {
       var res = await _apiCaller.userLogincall(bodyData);
-      log("doUserLogin Body Data : $bodyData---> RESPONSE: $res ");
+      Logger.dataLog("doUserLogin Body Data : $bodyData---> RESPONSE: $res ");
       var data = LoginUserDataModel.fromJson(res);
       _verifyUser.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
-      log("doUserLoginAndFetchUserData Error : $e");
+      Logger.dataLog("doUserLoginAndFetchUserData Error : $e");
       throw "Something went wrong in doUserLogin: $e";
     }
   }
@@ -83,7 +86,7 @@ class GlobalBloc {
   //   Map bodyData = {"phone": phone, "password": pass};
   //   try {
   //     var response = await _apiCaller.userLogincall(bodyData);
-  //     log("doUserLogin Body Data : $bodyData---> RESPONSE: ${response} ");
+  //     Logger.dataLog("doUserLogin Body Data : $bodyData---> RESPONSE: ${response} ");
 
   //     if (response["errorcode"] == 0) {
   //       var res = LoginUserDataModel.fromJson(response);
@@ -139,13 +142,14 @@ class GlobalBloc {
 
     try {
       Map<String, dynamic> res = await _apiCaller.getMobileMenuData(bodyData);
-      log('doFetchMobileMenu bodyData : $bodyData --Response : $res');
+      Logger.dataLog(
+          'doFetchMobileMenu bodyData : $bodyData --Response : $res');
       var data = MobileMenuModel.fromJson(res);
       _liveMobileMenuData.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
-      log("doFetchMobileMenu Error : $e");
+      Logger.dataLog("doFetchMobileMenu Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -170,12 +174,13 @@ class GlobalBloc {
     };
     try {
       var res = await _apiCaller.markUserAttendance(bodyData);
-      log("doMarkUserAttendance Body Data : $bodyData --Response : $res");
+      Logger.dataLog(
+          "doMarkUserAttendance Body Data : $bodyData --Response : $res");
       globalUtils.showSnackBar(res['message']);
       EasyLoading.dismiss();
       return res;
     } catch (e) {
-      log("doMarkUserAttendance Error : $e");
+      Logger.dataLog("doMarkUserAttendance Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -199,11 +204,12 @@ class GlobalBloc {
 
     try {
       var res = await _apiCaller.endMarkUserAttendance(bodyData);
-      log("doUnMarkUserAttendance Body Data : $bodyData --Response : $res");
+      Logger.dataLog(
+          "doUnMarkUserAttendance Body Data : $bodyData --Response : $res");
       EasyLoading.dismiss();
       return res;
     } catch (e) {
-      log("doUnMarkUserAttendance Error : $e");
+      Logger.dataLog("doUnMarkUserAttendance Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -217,13 +223,13 @@ class GlobalBloc {
     EasyLoading.show(dismissOnTap: false);
     try {
       Map<String, dynamic> res = await _apiCaller.getDataOfFeedBack();
-      log('doFetchFeedBackQueData Response : $res');
+      Logger.dataLog('doFetchFeedBackQueData Response : $res');
       var data = FeedbackModel.fromJson(res);
       _liveFeedbackQueData.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
-      log("doFetchFeedBackQueData Error : $e");
+      Logger.dataLog("doFetchFeedBackQueData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -244,13 +250,14 @@ class GlobalBloc {
     try {
       Map<String, dynamic> res =
           await _apiCaller.getUserAttendanceDetails(bodyData);
-      log('doFetchAttendanceDetailsData Body Data : $bodyData -- Response : $res');
+      Logger.dataLog(
+          'doFetchAttendanceDetailsData Body Data : $bodyData -- Response : $res');
       var data = AttendanceDataModel.fromJson(res);
       _liveAttendanceData.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
-      log("doFetchAttendanceDetailsData Error : $e");
+      Logger.dataLog("doFetchAttendanceDetailsData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -261,23 +268,25 @@ class GlobalBloc {
       BehaviorSubject<OrderHistoryModel>();
 
   Future<OrderHistoryModel> doFetchOrderHistoryData(
-      {String? phone, String? mallId}) async {
+      {String? phone, String? mallId, String? storeId}) async {
     EasyLoading.show(dismissOnTap: false);
     Map bodyData = {
       "phone": phone,
       "mall_id": mallId,
+      "storeid": storeId ?? "0",
     };
 
     try {
       Map<String, dynamic> res = await _apiCaller.getOrderHistoryData(bodyData);
-      log("doFetchOrderHistoryData BodyData : $bodyData ---Response : res");
+      Logger.dataLog(
+          "doFetchOrderHistoryData BodyData : $bodyData ---Response : $res");
       var data = OrderHistoryModel.fromJson(res);
       _liveOrderHistory.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
       EasyLoading.dismiss();
-      log("doFetchOrderHistoryData Error : $e");
+      Logger.dataLog("doFetchOrderHistoryData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -294,14 +303,15 @@ class GlobalBloc {
 
     try {
       Map<String, dynamic> res = await _apiCaller.getItemHistoryData(bodyData);
-      log("doFetchItemHistoryData BodyData : $bodyData ---Response : $res");
+      Logger.dataLog(
+          "doFetchItemHistoryData BodyData : $bodyData ---Response : $res");
       var data = OrderItemHistoryModel.fromJson(res);
       _liveItemHistory.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
       EasyLoading.dismiss();
-      log("doFetchItemHistoryData Error : $e");
+      Logger.dataLog("doFetchItemHistoryData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -321,14 +331,15 @@ class GlobalBloc {
     try {
       Map<String, dynamic> res =
           await _apiCaller.getPurchaseHistoryData(bodyData);
-      log("doFetchPurchaseHistoryData BodyData : $bodyData ---Response : $res");
+      Logger.dataLog(
+          "doFetchPurchaseHistoryData BodyData : $bodyData ---Response : $res");
 
       _livePurchaseHistory.add(res);
       EasyLoading.dismiss();
       return res;
     } catch (e) {
       EasyLoading.dismiss();
-      log("doFetchPurchaseHistoryData Error : $e");
+      Logger.dataLog("doFetchPurchaseHistoryData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -343,14 +354,14 @@ class GlobalBloc {
 
     try {
       Map<String, dynamic> res = await _apiCaller.getMallListData();
-      log("doFetchMallListData BodyData Response : $res");
+      Logger.dataLog("doFetchMallListData BodyData Response : $res");
       var data = MallListModel.fromJson(res);
 
       _liveMallListData.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
-      log("doFetchMallListData Error : $e");
+      Logger.dataLog("doFetchMallListData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }
@@ -363,12 +374,106 @@ class GlobalBloc {
 
     try {
       var res = await _apiCaller.getPurchaseCount(bodyData);
-      log("doFetchPurchaseCountData BodyData : $bodyData Response : $res");
+      Logger.dataLog(
+          "doFetchPurchaseCountData BodyData : $bodyData Response : $res");
 
       EasyLoading.dismiss();
       return res;
     } catch (e) {
-      log("doFetchPurchaseCountData Error : $e");
+      Logger.dataLog("doFetchPurchaseCountData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Get Store List Data------------------//
+  BehaviorSubject<StoreListModel> get getStoreList => _liveStoreList;
+  final BehaviorSubject<StoreListModel> _liveStoreList =
+      BehaviorSubject<StoreListModel>();
+
+  Future<StoreListModel> doFetchStoreListData(String mallId) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {"mall_id": mallId};
+    try {
+      Map<String, dynamic> res = await _apiCaller.getStoreListData(bodyData);
+      Logger.dataLog("getStoreListData BodyData : $bodyData --Response : $res");
+      var data = StoreListModel.fromJson(res);
+      _liveStoreList.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      Logger.dataLog("doFetchStoreListData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Category List Data------------------//
+  BehaviorSubject<CategoryListModel> get getCategoryList => _liveCategoryList;
+  final BehaviorSubject<CategoryListModel> _liveCategoryList =
+      BehaviorSubject<CategoryListModel>();
+
+  Future<CategoryListModel> doFetchCategoryListData() async {
+    EasyLoading.show(dismissOnTap: false);
+
+    try {
+      Map<String, dynamic> res = await _apiCaller.getCategoryListData();
+      Logger.dataLog("doFetchCategoryListData Response : $res");
+      var data = CategoryListModel.fromJson(res);
+      _liveCategoryList.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      Logger.dataLog("doFetchStoreListData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Sub-Category List Data------------------//
+  BehaviorSubject<SubCategoryListModel> get getSubCategoryList =>
+      _liveSubCategoryList;
+  final BehaviorSubject<SubCategoryListModel> _liveSubCategoryList =
+      BehaviorSubject<SubCategoryListModel>();
+
+  Future<SubCategoryListModel> doFetchSubCategoryListData(
+      String categoryId) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {"category_id": categoryId};
+    try {
+      Map<String, dynamic> res =
+          await _apiCaller.getSubCategoryListData(bodyData);
+      Logger.dataLog(
+          "doFetchSubCategoryListData BodyData: $bodyData Response : $res");
+      var data = SubCategoryListModel.fromJson(res);
+      _liveSubCategoryList.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      Logger.dataLog("doFetchSubCategoryListData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Product List Data------------------//
+  BehaviorSubject<ProductListModel> get getProductList => _liveProductList;
+  final BehaviorSubject<ProductListModel> _liveProductList =
+      BehaviorSubject<ProductListModel>();
+
+  Future<ProductListModel> doFetchProductListData(
+      {String? categoryId, String? subCategoryId}) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "category_id": categoryId,
+      "sub_category_id": subCategoryId
+    };
+    try {
+      Map<String, dynamic> res = await _apiCaller.getProductListData(bodyData);
+      Logger.dataLog(
+          "doFetchProductListData BodyData: $bodyData Response : $res");
+      var data = ProductListModel.fromJson(res);
+      _liveProductList.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      Logger.dataLog("doFetchProductListData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }

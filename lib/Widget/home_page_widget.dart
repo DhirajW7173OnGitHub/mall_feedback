@@ -28,19 +28,22 @@ class HomePageWidget extends StatelessWidget {
             maxRadius: 40,
             child: Image.asset("assets/images/person.png"),
           ),
-          // const SizedBox(
-          //   width: 10,
-          // ),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 StorageUtil.getString(localStorageData.NAME),
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
-                    fontSize: 26),
+                style:
+                    // GoogleFonts.akayaKanadaka(
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Colors.purple,
+                    //     fontSize: 26),
+                    Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.purple,
+                        fontSize: 26),
               ),
             ],
           ),
