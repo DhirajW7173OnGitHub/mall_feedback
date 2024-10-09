@@ -30,6 +30,85 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     });
   }
 
+  void clickOnAddCart() {
+    showModalBottomSheet(
+      shape: const LinearBorder(),
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 300,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 160,
+                      width: 100,
+                      child: Image.network(
+                        args!.productDatum!.productImage,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            args!.productDatum!.productName,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            args!.productDatum!.description,
+                            maxLines: 6,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        Text(
+                          "\u{20B9}${args!.productDatum!.price}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Continue"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,7 +135,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Expanded(
                 flex: 50,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: clickOnAddCart,
                   child: Container(
                     alignment: Alignment.center,
                     child: const Text(

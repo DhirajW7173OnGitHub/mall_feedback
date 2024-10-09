@@ -50,6 +50,12 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
+  void selectCatForProduct(int index) {
+    setState(() {
+      selectedCategoryIndex = index;
+    });
+  }
+
   Widget buildCategoryList() {
     return StreamBuilder<CategoryListModel>(
       stream: globalBloc.getCategoryList.stream,
@@ -77,9 +83,7 @@ class _OrderPageState extends State<OrderPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: GestureDetector(
                     onTap: () {
-                      setState(() {
-                        selectedCategoryIndex = index;
-                      });
+                      selectCatForProduct(index);
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.4,
@@ -180,35 +184,37 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget buildProductGridWidget() {
-    return Expanded(
-      child: StreamBuilder<ProductListModel>(
-        stream: globalBloc.getProductList.stream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          var productList = snapshot.data!.data;
-          return GridView.count(
+    return StreamBuilder<ProductListModel>(
+      stream: globalBloc.getProductList.stream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        var productList = snapshot.data!.data;
+        return Expanded(
+          child: GridView.count(
             shrinkWrap: true,
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.66,
             crossAxisCount: 2,
             children: List.generate(
               productList.length,
               (index) {
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: InkWell(
                     onTap: () {
                       clickOnProduct(productList[index]);
                     },
                     child: Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.black,
@@ -216,38 +222,66 @@ class _OrderPageState extends State<OrderPage> {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(
-                              flex: 50,
-                              child: SizedBox(
-                                width: 80,
-                                height: 50,
-                                child: Image.network(
-                                  productList[index].productImage,
-                                  fit: BoxFit.fill,
-                                ),
+                            SizedBox(
+                              width: 120,
+                              height: 140,
+                              child: Image.network(
+                                productList[index].productImage,
+                                fit: BoxFit.fill,
                               ),
                             ),
-                            Expanded(
-                              flex: 40,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  productList[index].productName,
-                                  maxLines: 3,
-                                  textAlign: TextAlign.center,
+                            const SizedBox(height: 6),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                productList[index].productName,
+                                maxLines: 3,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "\u{20B9}${productList[index].price}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Product Point : ",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!
                                       .copyWith(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                 ),
-                              ),
+                                Text(
+                                  productList[index].productPoints,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -257,9 +291,9 @@ class _OrderPageState extends State<OrderPage> {
                 );
               },
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
