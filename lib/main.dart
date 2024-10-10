@@ -9,6 +9,8 @@ import 'package:mall_app/Utils/global_utils.dart';
 
 import 'firebase_options.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -78,19 +80,12 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.purple,
           primary: Colors.purple,
         ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
       ),
       builder: EasyLoading.init(),
       home: const SplashScreen(),
+      navigatorKey: navigatorKey,
     );
   }
 }
-
-// class MyHttpOverrides extends HttpOverrides {
-//   @override
-//   HttpClient createHttpClient(SecurityContext? context) {
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback =
-//           (X509Certificate cert, String host, int port) => true;
-//   }
-// }

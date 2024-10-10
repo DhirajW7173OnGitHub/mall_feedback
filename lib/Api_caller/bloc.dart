@@ -4,7 +4,9 @@ import 'package:mall_app/Attendance%20/Model/attendance_details_model.dart';
 import 'package:mall_app/Model/login_user_model.dart';
 import 'package:mall_app/Model/mall_list_model.dart';
 import 'package:mall_app/Model/mobile_menu_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/cart_screen_mode.dart';
 import 'package:mall_app/Purchase/Purchase_Model/category_list_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/new_order_list_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_history_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_item_history_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/product_list_model.dart';
@@ -76,56 +78,6 @@ class GlobalBloc {
       throw "Something went wrong in doUserLogin: $e";
     }
   }
-
-  // doUserLogin(
-  //   BuildContext context, {
-  //   String? phone,
-  //   String? pass,
-  // }) async {
-  //   EasyLoading.show(dismissOnTap: false);
-  //   Map bodyData = {"phone": phone, "password": pass};
-  //   try {
-  //     var response = await _apiCaller.userLogincall(bodyData);
-  //     Logger.dataLog("doUserLogin Body Data : $bodyData---> RESPONSE: ${response} ");
-
-  //     if (response["errorcode"] == 0) {
-  //       var res = LoginUserDataModel.fromJson(response);
-  //       if (res.errorcode == 0 && res.msg.toLowerCase() == "success") {
-  //         await StorageUtil.putString(
-  //             localStorageData.ID, res.user.id.toString());
-  //         StorageUtil.putString(localStorageData.NAME, res.user.name);
-  //         StorageUtil.putString(
-  //             localStorageData.ROLE_ID, res.user.roleId.toString());
-  //         StorageUtil.putString(localStorageData.EMAIL, res.user.email);
-  //         StorageUtil.putString(localStorageData.MALL_ID, res.user.mallIds);
-  //         StorageUtil.putString(localStorageData.LOCATION, res.user.location);
-  //         StorageUtil.putString(localStorageData.PHONE, res.user.phone);
-  //         StorageUtil.putString(localStorageData.TOKEN, res.token);
-
-  //         _verifyUser.add(res);
-
-  //         EasyLoading.dismiss();
-  //         Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => HomePage(),
-  //           ),
-  //         );
-  //         return res;
-  //       } else {
-  //         EasyLoading.dismiss();
-  //         globalUtils.showNegativeSnackBar(msg: res.msg);
-  //         return response;
-  //       }
-  //     } else {
-  //       EasyLoading.dismiss();
-  //       globalUtils.showNegativeSnackBar(msg: response["message"]);
-  //       return response;
-  //     }
-  //   } catch (e) {
-  //     throw "Something went wrong in doUserLogin: $e";
-  //   }
-  // }
 
   //--------------------Mobile MenuApi------------------//
   BehaviorSubject<MobileMenuModel> get getMobileMenu => _liveMobileMenuData;
@@ -467,13 +419,123 @@ class GlobalBloc {
     try {
       Map<String, dynamic> res = await _apiCaller.getProductListData(bodyData);
       Logger.dataLog(
-          "doFetchProductListData BodyData: $bodyData Response : $res");
+          "doFetchProductListData BodyData: $bodyData Response : res");
       var data = ProductListModel.fromJson(res);
       _liveProductList.add(data);
       EasyLoading.dismiss();
       return data;
     } catch (e) {
       Logger.dataLog("doFetchProductListData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Product Add In Cart Data------------------//
+  Future<Map> doAddProductDataInCart({
+    String? userId,
+    String? mallId,
+    String? productId,
+    String? productQty,
+  }) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "customer_id": userId,
+      "mall_id": mallId,
+      "product_id": productId,
+      "product_quantity": productQty
+    };
+    try {
+      Map<String, dynamic> res = await _apiCaller.getAddProductInCart(bodyData);
+      Logger.dataLog(
+          "doAddProductDataInCart BodyData: $bodyData Response : $res");
+      EasyLoading.dismiss();
+      return res;
+    } catch (e) {
+      EasyLoading.dismiss();
+      Logger.dataLog("doAddProductDataInCart Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Fetch Product of Cart Data------------------//
+  BehaviorSubject<CartProductListModel> get getCartProductList =>
+      _liveCartProductList;
+  final BehaviorSubject<CartProductListModel> _liveCartProductList =
+      BehaviorSubject<CartProductListModel>();
+
+  Future<CartProductListModel> doFetchAllcartProductData({
+    String? userId,
+    String? mallId,
+  }) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {"customer_id": userId, "mall_id": mallId};
+    try {
+      Map<String, dynamic> res =
+          await _apiCaller.getAllProductDataForCart(bodyData);
+      Logger.dataLog(
+          "doFetchAllcartProductData BodyData: $bodyData Response : $res");
+      var data = CartProductListModel.fromJson(res);
+      _liveCartProductList.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      Logger.dataLog("doFetchAllcartProductData Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+
+  //-----------------Product Add In Cart Data------------------//
+  Future<Map> doDeleteProductFromCart({
+    String? userId,
+    String? mallId,
+    String? productId,
+    String? cartId,
+  }) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {
+      "customer_id": userId,
+      "mall_id": mallId,
+      "product_id": productId,
+      "cart_id": cartId
+    };
+    try {
+      Map<String, dynamic> res =
+          await _apiCaller.getDeleteProductFromCart(bodyData);
+      Logger.dataLog(
+          "doDeleteProductFromCart BodyData: $bodyData Response : $res");
+      EasyLoading.dismiss();
+      return res;
+    } catch (e) {
+      EasyLoading.dismiss();
+      Logger.dataLog("doDeleteProductFromCart Error : $e");
+      throw "Something Went Wrong : $e";
+    }
+  }
+  //getNewOrderProductData
+
+  //-----------------Fetch New order Product Data------------------//
+  BehaviorSubject<NewProductOrderListModel> get getNewOrderProductList =>
+      _liveNewOrderProductList;
+  final BehaviorSubject<NewProductOrderListModel> _liveNewOrderProductList =
+      BehaviorSubject<NewProductOrderListModel>();
+
+  Future<NewProductOrderListModel> doFetchNewOrderProductData({
+    String? userId,
+    String? mallId,
+  }) async {
+    EasyLoading.show(dismissOnTap: false);
+    Map bodyData = {"customer_id": userId, "mall_id": mallId};
+    try {
+      Map<String, dynamic> res =
+          await _apiCaller.getNewOrderProductData(bodyData);
+      Logger.dataLog(
+          "doFetchNewOrderProductData BodyData: $bodyData Response : $res");
+      var data = NewProductOrderListModel.fromJson(res);
+      _liveNewOrderProductList.add(data);
+      EasyLoading.dismiss();
+      return data;
+    } catch (e) {
+      Logger.dataLog("doFetchNewOrderProductData Error : $e");
       throw "Something Went Wrong : $e";
     }
   }

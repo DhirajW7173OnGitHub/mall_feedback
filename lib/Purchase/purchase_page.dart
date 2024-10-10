@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:badges/badges.dart' as badges;
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_history_model.dart';
+import 'package:mall_app/Purchase/Purchase_Model/purchase_data.dart';
 import 'package:mall_app/Purchase/Purchase_Model/store_list_model.dart';
 import 'package:mall_app/Purchase/Widget/order_list_widget.dart';
+import 'package:mall_app/Purchase/new_order_list_page.dart';
 import 'package:mall_app/Purchase/order_item_history_page.dart.dart';
 import 'package:mall_app/Purchase/order_screen.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
@@ -34,9 +37,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
   List<Order> filterOrderHistoryList = [];
 
-  //StoreDatum? firstStoreData;
-
-  String? _selectedDate;
+  String? selectedDate;
   bool isEnterSearch = false;
 
   @override
@@ -128,7 +129,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         isEnterSearch = true;
       } else {
         isEnterSearch = false;
-        _selectedDate = null;
+        selectedDate = null;
       }
     });
   }
@@ -142,6 +143,29 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Order History"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => NewOrderProductScreen(
+                      mallId: widget.mallId,
+                    ),
+                  ),
+                );
+              },
+              child: badges.Badge(
+                showBadge: true,
+                position: badges.BadgePosition.topEnd(top: -9, end: -5),
+                badgeStyle:
+                    badges.BadgeStyle(borderRadius: BorderRadius.circular(10)),
+                child: const Text(
+                  "New Order",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+          ],
         ),
         body: Column(
           children: [
@@ -352,20 +376,16 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   }
 
   void navigateToOrderPage() {
-    // PurchaseData args;
-    // args = PurchaseData(
-    //   totalInvoiceAmount:
-    //       globalBloc.getOrderHistory.stream.value.totalInvoiceAmount,
-    //   availablePoint: globalBloc.getOrderHistory.stream.value.availablePoint,
-    //   totalLoyaltyPoint:
-    //       globalBloc.getOrderHistory.stream.value.totalLoylityPoints,
-    // );
+    PurchaseData args;
+    args = PurchaseData(
+      mallId: widget.mallId.toString(),
+    );
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const OrderPage(),
-        // settings: RouteSettings(
-        //   arguments: args,
-        // ),
+        settings: RouteSettings(
+          arguments: args,
+        ),
       ),
     );
   }

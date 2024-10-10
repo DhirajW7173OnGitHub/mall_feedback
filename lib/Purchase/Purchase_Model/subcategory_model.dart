@@ -12,17 +12,19 @@ String subCategoryListModelToJson(SubCategoryListModel data) =>
 
 class SubCategoryListModel {
   int errorcode;
-
+  String msg;
   List<SubCategoryDatum> data;
 
   SubCategoryListModel({
     required this.errorcode,
+    required this.msg,
     required this.data,
   });
 
   factory SubCategoryListModel.fromJson(Map<String, dynamic> json) =>
       SubCategoryListModel(
         errorcode: json["errorcode"],
+        msg: json["message"] ?? "",
         data: (json["data"] == null || json["data"] == [])
             ? []
             : List<SubCategoryDatum>.from(
@@ -31,6 +33,7 @@ class SubCategoryListModel {
 
   Map<String, dynamic> toJson() => {
         "errorcode": errorcode,
+        "message": msg,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
       };
 }

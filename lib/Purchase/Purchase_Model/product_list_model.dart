@@ -12,16 +12,19 @@ String productListModelToJson(ProductListModel data) =>
 
 class ProductListModel {
   int errorcode;
+  String msg;
   List<ProductDatum> data;
 
   ProductListModel({
     required this.errorcode,
+    required this.msg,
     required this.data,
   });
 
   factory ProductListModel.fromJson(Map<String, dynamic> json) =>
       ProductListModel(
         errorcode: json["errorcode"],
+        msg: json["message"] ?? "",
         data: (json["data"] == [] || json["data"] == null)
             ? []
             : List<ProductDatum>.from(
@@ -30,6 +33,7 @@ class ProductListModel {
 
   Map<String, dynamic> toJson() => {
         "errorcode": errorcode,
+        "message": msg,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
       };
 }

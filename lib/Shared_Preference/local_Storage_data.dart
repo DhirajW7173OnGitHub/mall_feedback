@@ -10,6 +10,7 @@ class LocalStorageData {
   String TOKEN = "TOKEN";
   String ISLOGGEDIN = "ISLOGGEDIN";
   String LASTLOGGEDINTIME = "LASTLOGGEDINTIME";
+  String CUSTOMERID = "CUSTOMERID";
 }
 
 LocalStorageData localStorageData = LocalStorageData();

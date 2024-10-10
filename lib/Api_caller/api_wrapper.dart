@@ -30,7 +30,10 @@ class ApiWrapper {
     final url = Uri.parse('$baseUrl/$endpoint');
     log('url: $url' + ' body: $body ');
 
-    final response = await _client.post(url, body: body);
+    final response = await _client.post(
+      url,
+      body: body,
+    );
 
     return _processResponse(response);
   }
