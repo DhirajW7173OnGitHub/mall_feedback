@@ -47,7 +47,7 @@ class _CartPageState extends State<CartPage> {
       } catch (e) {
         Logger.dataPrint('Error Occured in Argument');
       }
-      Logger.dataLog("Argument Data : ${args!.productDatum!.productName}");
+
       getProductCartData();
     });
   }
@@ -100,112 +100,118 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cart"),
-      ),
-      bottomNavigationBar: (productListData.isEmpty)
-          ? Container(
-              height: 100,
-            )
-          : Container(
-              height: 90,
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(),
-                ),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Total: \u{20B9}${finalAmount.toStringAsFixed(2)}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          "Used Point : ${usedPoint.toStringAsFixed(2)}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: finalOrderUpload,
-                      child: const Text("Order Product"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-      body: Column(
-        children: [
-          StreamBuilder<CartProductListModel>(
-            stream: globalBloc.getCartProductList.stream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: Text(
-                    "No Data Found",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, true);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Cart"),
+        ),
+        bottomNavigationBar: (productListData.isEmpty)
+            ? Container(
+                height: 100,
+              )
+            : Container(
+                height: 90,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(),
                   ),
-                );
-              }
-              if (snapshot.data!.data.isEmpty) {
-                return Expanded(
-                  child: Center(
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Total: \u{20B9}${finalAmount.toStringAsFixed(2)}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            "Used Point : ${usedPoint.toStringAsFixed(2)}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: finalOrderUpload,
+                        child: const Text("Order Product"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        body: Column(
+          children: [
+            StreamBuilder<CartProductListModel>(
+              stream: globalBloc.getCartProductList.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
                     child: Text(
-                      "No Product In Cart.",
+                      "No Data Found",
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
+                  );
+                }
+                if (snapshot.data!.data.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        "No Product In Cart.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                productListData = snapshot.data!.data;
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ListView.builder(
+                      itemCount: productListData.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return CartWidget(
+                          onTapOnMinus: () => decreaseQty(index),
+                          onTapOnPlus: () => increaseQty(index),
+                          deleteTap: () =>
+                              deleteProductFromCart(productListData[index]),
+                          prodQty: productListData[index].productQuantity,
+                          prodImage: productListData[index].productImage,
+                          prodName: productListData[index].productName,
+                          prodPoint: productListData[index].productPoints,
+                          prodPrice: productListData[index].price,
+                        );
+                      },
+                    ),
                   ),
                 );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              productListData = snapshot.data!.data;
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ListView.builder(
-                    itemCount: productListData.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return CartWidget(
-                        onTapOnMinus: () => decreaseQty(index),
-                        onTapOnPlus: () => increaseQty(index),
-                        deleteTap: () =>
-                            deleteProductFromCart(productListData[index]),
-                        prodQty: productListData[index].productQuantity,
-                        prodImage: productListData[index].productImage,
-                        prodName: productListData[index].productName,
-                        prodPoint: productListData[index].productPoints,
-                        prodPrice: productListData[index].price,
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -239,7 +245,7 @@ class _CartPageState extends State<CartPage> {
       double value = double.parse(args!.availablePoint!);
       if (usedPoint > value) {
         EasyLoading.dismiss();
-        return getCommonDialog("You have not Sufficient Point.");
+        return getCommonDialog("Insufficient loyalty points");
       }
 
       //Api Send Data Fill Here

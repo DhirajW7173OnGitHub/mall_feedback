@@ -33,11 +33,11 @@ class CartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 120,
+                  height: 140,
                   width: 80,
                   child: Image.network(
                     prodImage,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -56,7 +56,7 @@ class CartWidget extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Text(
@@ -75,7 +75,7 @@ class CartWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Text(
@@ -94,7 +94,7 @@ class CartWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Container(
@@ -138,9 +138,10 @@ class CartWidget extends StatelessWidget {
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
                 onPressed: deleteTap,
-                child: const Text("Delete From Cart"),
+                icon: const Icon(Icons.delete),
+                label: const Text("Delete From Cart"),
               ),
             ),
           ],

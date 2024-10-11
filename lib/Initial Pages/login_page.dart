@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
@@ -8,6 +6,7 @@ import 'package:mall_app/Initial%20Pages/register_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -205,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () async {
-                        log('Selected UserType : $selectedToggle');
+                        Logger.dataLog('Selected UserType : $selectedToggle');
                         if (mobileController.text.isEmpty) {
                           _getMessage("Enter Mobile Number");
                         } else if (passController.text.isEmpty) {
@@ -237,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
     //check Internet Connection
     checkInternet = await InternetConnection().hasInternetAccess;
     if (checkInternet) {
-      log("Selected Toggle Button : $selectedToggle");
+      Logger.dataLog("Selected Toggle Button : $selectedToggle");
       final res = await globalBloc.doUserLoginAndFetchUserData(
         phone: mobileController.text,
         pass: passController.text,

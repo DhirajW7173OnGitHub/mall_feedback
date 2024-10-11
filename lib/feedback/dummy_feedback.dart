@@ -149,7 +149,7 @@
 //                 feedbackList.add(nameTextBoxMapData);
 //               }
 
-//               log('Name Text Box Data:$feedbackList');
+//               Logger.dataLog('Name Text Box Data:$feedbackList');
 //             },
 //           ),
 //         );
@@ -187,7 +187,7 @@
 //                 } else {
 //                   feedbackList.add(mobileTextBoxMapData);
 //                 }
-//                 log('Mobile Text BOx Data :$mobileTextBoxMapData');
+//                 Logger.dataLog('Mobile Text BOx Data :$mobileTextBoxMapData');
 //               },
 //             ),
 //           ),
@@ -249,7 +249,7 @@
 //                   feedbackList.add(emailTextBoxMapData);
 //                 }
 
-//                 log('Name Text BOx Data:$feedbackList');
+//                 Logger.dataLog('Name Text BOx Data:$feedbackList');
 //               },
 //             ),
 //           ),
@@ -285,7 +285,7 @@
 //                 feedbackList.add(genericTextBoxMapData);
 //               }
 
-//               log('Generic TextBox Data:$feedbackList');
+//               Logger.dataLog('Generic TextBox Data:$feedbackList');
 //             },
 //           ),
 //         );
@@ -325,7 +325,7 @@
 //             feedbackList.add(commentTextAreaMapData);
 //           }
 
-//           log('Name Text BOx Data:$feedbackList');
+//           Logger.dataLog('Name Text BOx Data:$feedbackList');
 //         },
 //       ),
 //     );
@@ -368,7 +368,7 @@
 //               }
 //             });
 
-//             log('Is checked Click : $feedbackList');
+//             Logger.dataLog('Is checked Click : $feedbackList');
 //           },
 //         );
 //       }).toList(),
@@ -408,7 +408,7 @@
 //             } else {
 //               feedbackList.add(radioButtonMapData);
 //             }
-//             log('Selected Radio Button for Question ID $selectedRadioButton');
+//             Logger.dataLog('Selected Radio Button for Question ID $selectedRadioButton');
 //           },
 //         );
 //       }).toList(),
@@ -442,7 +442,7 @@
 //             } else {
 //               feedbackList.add(starMapData);
 //             }
-//             log('Selected Stars: $starMapData');
+//             Logger.dataLog('Selected Stars: $starMapData');
 //           },
 //         );
 //       }),
@@ -473,7 +473,7 @@
 //         } else {
 //           feedbackList.add(smileyMapData);
 //         }
-//         log('Selected Smiley String: $smileyMapData');
+//         Logger.dataLog('Selected Smiley String: $smileyMapData');
 //       },
 //     );
 //   }
@@ -620,7 +620,7 @@
 
 //   void clickOnSubmitButton() async {
 //     checkInternet = await InternetConnection().hasInternetAccess;
-//     log('Internet $checkInternet');
+//     Logger.dataLog('Internet $checkInternet');
 //     if (checkInternet) {
 //       EasyLoading.show(dismissOnTap: false);
 
@@ -655,7 +655,7 @@
 //             StorageUtil.getString(localStorageData.ID), feedbackList);
 //         EasyLoading.dismiss();
 //         if (res!["errorcode"] == 0) {
-//           finalSubmitDialog(msg: res["message"]);
+//           finalSubmitDiaLogger.dataLog(msg: res["message"]);
 //         } else {
 //           _getMessage(res["message"], 2);
 //         }
@@ -700,7 +700,7 @@
 //       } else {
 //         feedbackList.add(ageTextBoxMapData);
 //       }
-//       log('Mobile Text BOx Data :$feedbackList');
+//       Logger.dataLog('Mobile Text BOx Data :$feedbackList');
 //     }
 //   }
 
@@ -714,12 +714,12 @@
 //     return age;
 //   }
 
-//   void finalSubmitDialog({String? msg}) {
-//     showDialog(
+//   void finalSubmitDiaLogger.dataLog({String? msg}) {
+//     showDiaLogger.dataLog(
 //         context: context,
 //         barrierDismissible: false,
 //         builder: (context) {
-//           return AlertDialog(
+//           return AlertDiaLogger.dataLog(
 //             content: Column(
 //               mainAxisSize: MainAxisSize.min,
 //               children: [

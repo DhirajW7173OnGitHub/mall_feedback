@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
@@ -9,6 +7,7 @@ import 'package:mall_app/Api_caller/upload_data_api_caller.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 import 'package:mall_app/feedback/Model/feedback_model.dart';
 
@@ -184,7 +183,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   //       feedbackList.add(feedbackAnswers[questionId]!);
   //     }
 
-  //     log('Feedback Data: $feedbackList');
+  //     Logger.dataLog('Feedback Data: $feedbackList');
   //   });
   // }
 
@@ -226,7 +225,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 feedbackList.add(nameTextBoxMapData);
               }
 
-              log('Name Text Box Data:$feedbackList');
+              Logger.dataLog('Name Text Box Data:$feedbackList');
             },
           ),
         );
@@ -264,7 +263,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 } else {
                   feedbackList.add(mobileTextBoxMapData);
                 }
-                log('Mobile Text BOx Data :$feedbackList');
+                Logger.dataLog('Mobile Text BOx Data :$feedbackList');
               },
             ),
           ),
@@ -326,7 +325,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                   feedbackList.add(emailTextBoxMapData);
                 }
 
-                log('Name Text BOx Data:$feedbackList');
+                Logger.dataLog('Name Text BOx Data:$feedbackList');
               },
             ),
           ),
@@ -362,7 +361,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 feedbackList.add(genericTextBoxMapData);
               }
 
-              log('Generic TextBox Data:$feedbackList');
+              Logger.dataLog('Generic TextBox Data:$feedbackList');
             },
           ),
         );
@@ -396,7 +395,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
           } else {
             feedbackList.add(commentTextAreaMapData);
           }
-          log('Name Text BOx Data:$feedbackList');
+          Logger.dataLog('Name Text BOx Data:$feedbackList');
         },
       ),
     );
@@ -444,7 +443,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
               }
             });
 
-            log('Is checked Click : $feedbackList');
+            Logger.dataLog('Is checked Click : $feedbackList');
           },
         );
       }).toList(),
@@ -518,7 +517,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                           }
                         });
 
-                        log('Selected Radio Button for Question ID $selectedRadioButton');
+                        Logger.dataLog(
+                            'Selected Radio Button for Question ID $selectedRadioButton');
                       },
                     ),
                   ],
@@ -597,7 +597,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                       }
                     });
 
-                    log('Selected Radio Button for Question ID $selectedRadioButton');
+                    Logger.dataLog(
+                        'Selected Radio Button for Question ID $selectedRadioButton');
                   },
                 );
               }).toList(),
@@ -691,7 +692,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                         } else {
                           feedbackList.add(radioButtonMapData);
                         }
-                        log('Selected Radio Button for Question ID $feedbackList');
+                        Logger.dataLog(
+                            'Selected Radio Button for Question ID $feedbackList');
                       }
                     });
                   },
@@ -731,7 +733,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                             } else {
                               feedbackList.add(radioButtonMapData);
                             }
-                            log('Selected Stars: $feedbackList');
+                            Logger.dataLog('Selected Stars: $feedbackList');
                           },
                         );
                       }),
@@ -774,7 +776,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 } else {
                   feedbackList.add(radioButtonMapData);
                 }
-                log('Selected Radio Button for Question ID $selectedRadioButton');
+                Logger.dataLog(
+                    'Selected Radio Button for Question ID $selectedRadioButton');
               },
             );
           }).toList(),
@@ -814,7 +817,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                 feedbackList.add(starMapData);
                 selectedStars = 0;
               }
-              log('Selected Stars: $starRatings : $feedbackList');
+              Logger.dataLog('Selected Stars: $starRatings : $feedbackList');
             },
           );
         },
@@ -846,7 +849,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
         } else {
           feedbackList.add(smileyMapData);
         }
-        log('Selected Smiley String: $smileyMapData');
+        Logger.dataLog('Selected Smiley String: $smileyMapData');
       },
     );
   }
@@ -878,7 +881,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
                     } else {
                       feedbackList.add(scaleMapSelection);
                     }
-                    log('Selected Smiley String: $scaleMapSelection');
+                    Logger.dataLog(
+                        'Selected Smiley String: $scaleMapSelection');
                   });
                 },
                 child: Container(
@@ -1067,7 +1071,8 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
       //Here Also Save All Answer questions id in questionIdFromFeedback
       List<int> questionIdFromFeedback =
           feedbackList.map((item) => item["question_id"] as int).toList();
-      log("Total Question Id :$availableAllId ---Answer Question Id $questionIdFromFeedback");
+      Logger.dataLog(
+          "Total Question Id :$availableAllId ---Answer Question Id $questionIdFromFeedback");
 
       var data = [];
 
@@ -1142,7 +1147,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
   //     } else {
   //       feedbackList.add(ageTextBoxMapData);
   //     }
-  //     log('Mobile Text BOx Data :$feedbackList');
+  //     Logger.dataLog('Mobile Text BOx Data :$feedbackList');
   //   }
   // }
 
@@ -1342,7 +1347,7 @@ class _FeedBackScreenState extends State<FeedBackScreen> with ValidationMixin {
     //         } else {
     //           feedbackList.add(radioButtonMapData);
     //         }
-    //         log('Selected Radio Button for Question ID $selectedRadioButton');
+    //         Logger.dataLog('Selected Radio Button for Question ID $selectedRadioButton');
     //       },
     //     );
     //   }).toList(),

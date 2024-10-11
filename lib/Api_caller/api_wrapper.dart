@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mall_app/Environment/base_data.dart';
 import 'package:mall_app/SSL_Pinning/ssl_pinning.dart';
 import 'package:mall_app/Utils/app_exception.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Utils/global_utils.dart';
 
 class ApiWrapper {
@@ -17,7 +17,7 @@ class ApiWrapper {
     _client = await getSSLPinningClient();
 
     final url = Uri.parse('$baseUrl/$endpoint');
-    log('url: $url');
+    Logger.dataLog('url: $url');
     final response = await _client.get(url);
 
     return _processResponse(response);
@@ -28,7 +28,7 @@ class ApiWrapper {
       String endpoint, dynamic body) async {
     _client = await getSSLPinningClient();
     final url = Uri.parse('$baseUrl/$endpoint');
-    log('url: $url' + ' body: $body ');
+    Logger.dataLog('url: $url' + ' body: $body ');
 
     final response = await _client.post(
       url,
@@ -39,7 +39,7 @@ class ApiWrapper {
   }
 
   static dynamic _processResponse(http.Response response) {
-    log('Response Status Code : ${response.statusCode} ');
+    Logger.dataLog('Response Status Code : ${response.statusCode} ');
     switch (response.statusCode) {
       case 200:
         var responseJson = jsonDecode(response.body);

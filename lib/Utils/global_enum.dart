@@ -1,1 +1,1 @@
-enum EbumCartPage { PRODUCTDETAILPAGE }
+enum EbumCartPage { PRODUCTDETAILPAGE, ORDERSCREEN }

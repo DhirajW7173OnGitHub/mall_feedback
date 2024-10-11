@@ -8,7 +8,7 @@ class NewProductOrderWidget extends StatelessWidget {
     required this.prodName,
     required this.prodPoint,
     required this.prodPrice,
-  //  required this.deleteTap,
+    //  required this.deleteTap,
   });
 
   final String prodName;
@@ -52,26 +52,28 @@ class NewProductOrderWidget extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Text(
                           "Price : ",
                           style: Theme.of(context)
                               .textTheme
-                              .titleLarge!
-                              .copyWith(fontWeight: FontWeight.w700),
+                              .bodyLarge!
+                              .copyWith(
+                                  fontWeight: FontWeight.w700, fontSize: 18),
                         ),
                         Text(
                           "\u{20B9}$prodPrice",
                           style: Theme.of(context)
                               .textTheme
-                              .titleLarge!
-                              .copyWith(fontWeight: FontWeight.w700),
+                              .bodyLarge!
+                              .copyWith(
+                                  fontWeight: FontWeight.w700, fontSize: 18),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    //const SizedBox(height: 8),
                     Row(
                       children: [
                         Text(
@@ -89,7 +91,7 @@ class NewProductOrderWidget extends StatelessWidget {
                               .copyWith(fontWeight: FontWeight.w400),
                         ),
                       ],
-                    ),                   
+                    ),
                   ],
                 ),
               ],

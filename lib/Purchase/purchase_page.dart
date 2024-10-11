@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:badges/badges.dart' as badges;
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +12,7 @@ import 'package:mall_app/Purchase/order_screen.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
+import 'package:mall_app/Utils/common_log.dart';
 
 class PurchaseScreen extends StatefulWidget {
   const PurchaseScreen({
@@ -44,7 +42,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   void initState() {
     super.initState();
 
-    log('Getting Mall ID : ${widget.mallId}');
+    Logger.dataLog('Getting Mall ID : ${widget.mallId}');
     sessionManager.updateLastLoggedInTimeAndLoggedInStatus();
 
     _fetchOrderHistoryData();
@@ -154,16 +152,20 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   ),
                 );
               },
-              child: badges.Badge(
-                showBadge: true,
-                position: badges.BadgePosition.topEnd(top: -9, end: -5),
-                badgeStyle:
-                    badges.BadgeStyle(borderRadius: BorderRadius.circular(10)),
-                child: const Text(
-                  "New Order",
-                  style: TextStyle(color: Colors.white),
-                ),
+              child: const Text(
+                "Orders",
+                style: TextStyle(color: Colors.white),
               ),
+              // badges.Badge(
+              //   showBadge: true,
+              //   position: badges.BadgePosition.topEnd(top: -9, end: -5),
+              //   badgeStyle:
+              //       badges.BadgeStyle(borderRadius: BorderRadius.circular(10)),
+              //   child: const Text(
+              //     "Orders",
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
             )
           ],
         ),
@@ -524,7 +526,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //               // if (storeList.isNotEmpty) {
             //               //   firstStoreData = storeList.first;
             //               // }
-            //               // log('@@@@@@@@@@@@:${firstStoreData!.brandName}');
+            //               //'@${firstStoreData!.brandName}');
             //               return Padding(
             //                 padding: const EdgeInsets.symmetric(
             //                     horizontal: 12, vertical: 8),

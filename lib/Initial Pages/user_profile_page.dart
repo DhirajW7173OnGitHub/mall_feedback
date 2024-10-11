@@ -103,7 +103,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   //   var img = await image.pickImage(source: ImageSource.gallery);
 
   //   if (img!.path != null) {
-  //     log('Selected Image Path : ${img.path}');
+  //     Logger.dataLog('Selected Image Path : ${img.path}');
   //     // setState(() {
   //     //   file = File(img.path);
   //     // });

@@ -109,7 +109,7 @@ class ApiCaller {
     var endPoint = "orders-history";
     try {
       final res = await ApiWrapper.post(endPoint, body);
-      // log("getOrderHistoryData body Data : $body --Response : $res");
+      // LOgger.dataLog("getOrderHistoryData body Data : $body --Response : $res");
       return res;
     } catch (e) {
       Logger.dataPrint('getOrderHistoryData Error: $e');

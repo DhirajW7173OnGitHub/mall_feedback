@@ -266,7 +266,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       double value = double.parse(args!.availablePoint!);
       if (usedPoint! > value) {
         EasyLoading.dismiss();
-        return getMessage("You have not Sufficient Point.");
+        return getMessage("Insufficient loyalty points.");
       }
 
       productList.add({

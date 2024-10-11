@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Validation/validation_mixin.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -76,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> with ValidationMixin {
           confirmedPass: _confirmPassController.text,
         );
 
-        log("Getting Response : $res --- ${res["errorcode"]}");
+        Logger.dataLog("Getting Response : $res --- ${res["errorcode"]}");
         if (res["errorcode"] == 0) {
           _getMessage(res["message"]);
           Future.delayed(const Duration(seconds: 3), () {

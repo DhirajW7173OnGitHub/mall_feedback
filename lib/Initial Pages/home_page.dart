@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -17,6 +15,7 @@ import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Widget/drawer_widget.dart';
 import 'package:mall_app/Widget/home_page_widget.dart';
 import 'package:mall_app/feedback/feedback_page.dart';
@@ -76,12 +75,13 @@ class _HomePageState extends State<HomePage> {
       date: currentDate,
     );
 
-    log('Attendance :${res.attendance == {}}--${res.errorcode} ${res.msg}');
+    Logger.dataLog(
+        'Attendance :${res.attendance == {}}--${res.errorcode} ${res.msg}');
     //Build Dialog on Attendance Response
     if (res.attendance != {} && res.errorcode == 1) {
       initialDialogForAttendance();
     } else {
-      log('you have already marked your attendance');
+      Logger.dataLog('you have already marked your attendance');
       //globalUtils.showSnackBar(res.msg);
       //_getCommonCodeDialog(res.msg);
     }
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(color: Colors.purple),
                     ),
                     onPressed: () async {
-                      log(' yes click');
+                      Logger.dataLog(' yes click');
                       _showMapDialog(checkInFromMap: () {
                         _getLocationAndTime('yes');
                       });
@@ -196,7 +196,8 @@ class _HomePageState extends State<HomePage> {
         await LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
     await _addUserMarker(userLocation!);
 
-    log('Location Latitude: ${currentLocation!.latitude} and longitude: ${currentLocation!.longitude}');
+    Logger.dataLog(
+        'Location Latitude: ${currentLocation!.latitude} and longitude: ${currentLocation!.longitude}');
 
     EasyLoading.dismiss();
 

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
@@ -7,6 +5,7 @@ import 'package:mall_app/Purchase/Purchase_Model/order_history_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/order_item_history_model.dart';
 import 'package:mall_app/Purchase/Widget/order_details_widget.dart';
 import 'package:mall_app/Purchase/Widget/order_item_history_widget.dart';
+import 'package:mall_app/Utils/common_log.dart';
 
 class OrderItemHistoryScreen extends StatefulWidget {
   const OrderItemHistoryScreen({super.key});
@@ -27,7 +26,7 @@ class _OrderItemHistoryScreenState extends State<OrderItemHistoryScreen> {
       try {
         //get All Order data from previous page and set in args
         args = ModalRoute.of(context)?.settings.arguments as Order;
-        log("Geeting Order Id : ${args!.id}");
+        Logger.dataLog("Geeting Order Id : ${args!.id}");
         setState(() {
           orderId = args!.id;
         });

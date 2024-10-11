@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
@@ -5,8 +6,12 @@ import 'package:mall_app/Purchase/Purchase_Model/category_list_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/product_list_model.dart';
 import 'package:mall_app/Purchase/Purchase_Model/purchase_data.dart';
 import 'package:mall_app/Purchase/Purchase_Model/subcategory_model.dart';
+import 'package:mall_app/Purchase/cart_page.dart';
 import 'package:mall_app/Purchase/product_detail_page.dart';
+import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
+import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_log.dart';
+import 'package:mall_app/Utils/global_enum.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -24,6 +29,9 @@ class _OrderPageState extends State<OrderPage> {
   int? selectedSubCatID;
   int? selectProdId;
 
+  //cart Badge Count
+  int count = 0;
+
   @override
   void initState() {
     super.initState();
@@ -39,12 +47,9 @@ class _OrderPageState extends State<OrderPage> {
       } catch (e) {
         Logger.dataPrint('Error Occured in Argument');
       }
-
+      getCartData();
       getCallAPIForOrder();
     });
-
-    // Logger.dataLog(
-    //     "Available Point:${globalBloc.getOrderHistory.stream.value.availablePoint}");
   }
 
   void getCallAPIForOrder() async {
@@ -53,10 +58,55 @@ class _OrderPageState extends State<OrderPage> {
     await globalBloc.doFetchProductListData(categoryId: "", subCategoryId: "");
   }
 
+  void getCartData() async {
+    if (args != null) {
+      var res = await globalBloc.doFetchAllcartProductData(
+        userId: StorageUtil.getString(localStorageData.ID),
+        mallId: args!.mallId,
+      );
+
+      setState(() {
+        count = res.data.length;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.grey[300],
+        iconTheme: const IconThemeData(color: Colors.black),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: commonNavigateForCart,
+              icon: badges.Badge(
+                showBadge: true,
+                position: badges.BadgePosition.topEnd(top: -13, end: -9),
+                badgeStyle:
+                    badges.BadgeStyle(borderRadius: BorderRadius.circular(10)),
+                badgeContent: Text(
+                  count.toString(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: Colors.white, fontSize: 8),
+                ),
+                badgeAnimation: const badges.BadgeAnimation.rotation(
+                  animationDuration: Duration(seconds: 1),
+                  colorChangeAnimationDuration: Duration(seconds: 1),
+                  loopAnimation: false,
+                  curve: Curves.fastOutSlowIn,
+                  colorChangeAnimationCurve: Curves.easeInCubic,
+                ),
+                child: const Icon(Icons.shopping_cart),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: (args == null)
           ? const Center(
               child: CircularProgressIndicator(),
@@ -361,7 +411,7 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  void clickOnProduct(ProductDatum productData) {
+  void clickOnProduct(ProductDatum productData) async {
     PurchaseData arg;
     arg = PurchaseData(
       availablePoint: globalBloc.getOrderHistory.stream.value.availablePoint,
@@ -372,7 +422,7 @@ class _OrderPageState extends State<OrderPage> {
       productDatum: productData,
       mallId: args!.mallId,
     );
-    Navigator.of(context).push(
+    var result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const ProductDetailsPage(),
         settings: RouteSettings(
@@ -380,5 +430,32 @@ class _OrderPageState extends State<OrderPage> {
         ),
       ),
     );
+
+    if (result == true) {
+      getCartData();
+    }
+  }
+
+  void commonNavigateForCart() async {
+    PurchaseData arg;
+    arg = PurchaseData(
+      availablePoint: globalBloc.getOrderHistory.stream.value.availablePoint,
+      totalInvoiceAmount:
+          globalBloc.getOrderHistory.stream.value.totalInvoiceAmount,
+      totalLoyaltyPoint:
+          globalBloc.getOrderHistory.stream.value.totalLoylityPoints,
+      navigateFromScreen: EbumCartPage.ORDERSCREEN.name,
+      mallId: args!.mallId,
+    );
+    var result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CartPage(),
+        settings: RouteSettings(arguments: arg),
+      ),
+    );
+
+    if (result == true) {
+      getCartData();
+    }
   }
 }
