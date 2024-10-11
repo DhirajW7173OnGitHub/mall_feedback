@@ -21,6 +21,12 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  final searchProdController = TextEditingController();
+
+  //List Of Product
+  List<ProductDatum> productList = [];
+  List<ProductDatum> filterProdList = [];
+
   PurchaseData? args;
 
   int selectedCategoryIndex = -1;
@@ -54,8 +60,12 @@ class _OrderPageState extends State<OrderPage> {
 
   void getCallAPIForOrder() async {
     await globalBloc.doFetchCategoryListData();
-    await globalBloc.doFetchSubCategoryListData("");
-    await globalBloc.doFetchProductListData(categoryId: "", subCategoryId: "");
+    //await globalBloc.doFetchSubCategoryListData("");
+    var res = await globalBloc.doFetchProductListData(
+        categoryId: "", subCategoryId: "");
+    setState(() {
+      filterProdList = res.data;
+    });
   }
 
   void getCartData() async {
@@ -114,9 +124,9 @@ class _OrderPageState extends State<OrderPage> {
           : Column(
               children: [
                 buildCategoryList(),
-                // const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // buildSubCategoryDropDown(),
-                const SizedBox(height: 20),
+                //   const SizedBox(height: 20),
                 buildProductGridWidget(),
                 const SizedBox(height: 20),
               ],
@@ -124,9 +134,11 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  void selectCategoryFromList(int index, CategoryDatum categoryData) {
+  void selectCategoryFromList(int index, CategoryDatum categoryData) async {
     Logger.dataLog(
         "Index : $index -- Category Data : ${categoryData.category}");
+    var res = await globalBloc.doFetchProductListData(
+        categoryId: categoryData.id.toString(), subCategoryId: "");
     setState(() {
       //Selection For Category
       selectedCategoryIndex = index;
@@ -137,8 +149,7 @@ class _OrderPageState extends State<OrderPage> {
       //Fetch Sub Category
       globalBloc.doFetchSubCategoryListData(categoryData.id.toString());
       //Fetch Product
-      globalBloc.doFetchProductListData(
-          categoryId: categoryData.id.toString(), subCategoryId: "");
+      filterProdList = res.data;
     });
   }
 
@@ -282,6 +293,22 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
+  void filterPrudList(String query) {
+    setState(() {
+      if (query.isNotEmpty) {
+        filterProdList = productList
+            .where(
+              (product) => product.productName
+                  .toLowerCase()
+                  .contains(query.toLowerCase()),
+            )
+            .toList();
+      } else {
+        filterProdList = productList;
+      }
+    });
+  }
+
   Widget buildProductGridWidget() {
     return StreamBuilder<ProductListModel>(
       stream: globalBloc.getProductList.stream,
@@ -294,9 +321,9 @@ class _OrderPageState extends State<OrderPage> {
             child: CircularProgressIndicator(),
           );
         }
-        var productList = snapshot.data!.data;
+        productList = snapshot.data!.data;
 
-        if (productList.isEmpty || productList == null) {
+        if (filterProdList.isEmpty || filterProdList == null) {
           return Expanded(
             child: Center(
               child: Text(
@@ -309,102 +336,124 @@ class _OrderPageState extends State<OrderPage> {
             ),
           );
         }
-
         return Expanded(
-          child: GridView.count(
-            shrinkWrap: true,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.66,
-            crossAxisCount: 2,
-            children: List.generate(
-              productList.length,
-              (index) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: InkWell(
-                    onTap: () {
-                      clickOnProduct(productList[index]);
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 120,
-                              height: 140,
-                              child: Image.network(
-                                productList[index].productImage,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                productList[index].productName,
-                                maxLines: 3,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "\u{20B9}${productList[index].price}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Product Point : ",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                Text(
-                                  productList[index].productPoints,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: TextField(
+                  controller: searchProdController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    contentPadding: const EdgeInsets.only(left: 10),
+                    hintText: "Search Product",
                   ),
-                );
-              },
-            ),
+                  onChanged: (value) {
+                    filterPrudList(value);
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.75,
+                  crossAxisCount: 2,
+                  children: List.generate(
+                    filterProdList.length,
+                    (index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        child: InkWell(
+                          onTap: () {
+                            clickOnProduct(filterProdList[index]);
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 120,
+                                    height: 140,
+                                    child: Image.network(
+                                      filterProdList[index].productImage,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      filterProdList[index].productName,
+                                      maxLines: 3,
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                  //const SizedBox(height: 4),
+                                  Text(
+                                    "\u{20B9}${filterProdList[index].price}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Product Point : ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      Text(
+                                        filterProdList[index].productPoints,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
