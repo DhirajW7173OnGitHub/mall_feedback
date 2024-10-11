@@ -436,16 +436,18 @@ class GlobalBloc {
     String? mallId,
     String? productId,
     String? productQty,
+    String? usedPoint,
   }) async {
     EasyLoading.show(dismissOnTap: false);
     Map bodyData = {
       "customer_id": userId,
       "mall_id": mallId,
       "product_id": productId,
-      "product_quantity": productQty
+      "product_quantity": productQty,
+      "used_points": usedPoint,
     };
     try {
-      Map<String, dynamic> res = await _apiCaller.getAddProductInCart(bodyData);
+      Map<String, dynamic> res = await _apiCaller.addProductInCart(bodyData);
       Logger.dataLog(
           "doAddProductDataInCart BodyData: $bodyData Response : $res");
       EasyLoading.dismiss();

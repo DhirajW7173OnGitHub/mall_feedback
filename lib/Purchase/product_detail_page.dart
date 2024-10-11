@@ -262,7 +262,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -297,10 +297,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       commonNavigateForCart();
     } else {
       var res = await globalBloc.doAddProductDataInCart(
-          userId: StorageUtil.getString(localStorageData.ID),
-          mallId: args!.mallId,
-          productId: args!.productDatum!.id.toString(),
-          productQty: "1");
+        userId: StorageUtil.getString(localStorageData.ID),
+        mallId: args!.mallId,
+        productId: args!.productDatum!.id.toString(),
+        productQty: "1",
+        usedPoint: args!.productDatum!.productPoints,
+      );
 
       if (res["errorcode"] == 1 || res["errorcode"] == "1") {
         return getCommonDialog(res["message"]);

@@ -221,28 +221,15 @@ class ApiCaller {
   }
 
   //----------------Final Order Of Product API----------------//
-  // Future<Map<String, dynamic>> finalUploadOrder(Map body) async {
-  //   var endPoint = "redeem-product";
-  //   try {
-  //     final res = await ApiWrapper.post(endPoint, body);
-  //     Logger.dataPrint(
-  //         "finalUploadOrder Body Data : $body --- Response : $res");
-  //     return res;
-  //   } catch (e) {
-  //     throw "finalUploadOrder Something Went Wrong $e";
-  //   }
-  // }
-
-  //----------------Final Order Of Product API----------------//
-  Future<Map<String, dynamic>> getAddProductInCart(Map body) async {
+  Future<Map<String, dynamic>> addProductInCart(Map body) async {
     var endPoint = "add-to-cart";
     try {
       final res = await ApiWrapper.post(endPoint, body);
       Logger.dataPrint(
-          "getAddProductInCart Body Data : $body --- Response : $res");
+          "addProductInCart Body Data : $body --- Response : $res");
       return res;
     } catch (e) {
-      throw "getAddProductInCart Something Went Wrong $e";
+      throw "addProductInCart Something Went Wrong $e";
     }
   }
 
