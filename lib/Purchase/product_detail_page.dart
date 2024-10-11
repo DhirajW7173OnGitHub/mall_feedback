@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/bloc.dart';
 import 'package:mall_app/Purchase/Purchase_Model/purchase_data.dart';
+import 'package:mall_app/Purchase/Widget/common_network_image_widget.dart';
 import 'package:mall_app/Purchase/cart_page.dart';
 import 'package:mall_app/Purchase/order_summary_page.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
@@ -115,10 +116,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       child: SizedBox(
                         width: double.maxFinite,
                         height: 400,
-                        child: Image.network(
-                          args!.productDatum!.productImage,
-                          fit: BoxFit.cover,
-                        ),
+                        child: CommonNetworkWidget(
+                            prodImage: args!.productDatum!.productImage),
+                        //  Image.network(
+                        //   args!.productDatum!.productImage,
+                        //   fit: BoxFit.cover,
+                        // ),
                       ),
                     ),
                     Padding(
@@ -209,13 +212,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 160,
-                      width: 100,
-                      child: Image.network(
-                        args!.productDatum!.productImage,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        height: 160,
+                        width: 100,
+                        child: CommonNetworkWidget(
+                            prodImage: args!.productDatum!.productImage)
+                        //  Image.network(
+                        //   args!.productDatum!.productImage,
+                        //   fit: BoxFit.cover,
+                        // ),
+                        ),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

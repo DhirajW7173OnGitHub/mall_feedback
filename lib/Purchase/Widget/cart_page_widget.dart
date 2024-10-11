@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mall_app/Purchase/Widget/common_network_image_widget.dart';
 
 class CartWidget extends StatelessWidget {
   const CartWidget({
@@ -35,10 +36,11 @@ class CartWidget extends StatelessWidget {
                 SizedBox(
                   height: 140,
                   width: 80,
-                  child: Image.network(
-                    prodImage,
-                    fit: BoxFit.fill,
-                  ),
+                  child: CommonNetworkWidget(prodImage: prodImage),
+                  //  Image.network(
+                  //   prodImage,
+                  //   fit: BoxFit.fill,
+                  // ),
                 ),
                 const SizedBox(width: 10),
                 Column(

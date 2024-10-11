@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mall_app/Api_caller/upload_data_api_caller.dart';
 import 'package:mall_app/Purchase/Purchase_Model/purchase_data.dart';
+import 'package:mall_app/Purchase/Widget/common_network_image_widget.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
@@ -137,10 +138,33 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                         height: 300,
                         width: 200,
                         alignment: Alignment.center,
-                        child: Image.network(
-                          args!.productDatum!.productImage,
-                          fit: BoxFit.cover,
-                        ),
+                        child: CommonNetworkWidget(
+                            prodImage: args!.productDatum!.productImage),
+                        //  Image.network(
+                        //   args!.productDatum!.productImage,
+                        //   errorBuilder:
+                        //       (BuildContext context, exception, stackTrace) {
+                        //     return const Center(
+                        //       child: Icon(Icons.error, color: Colors.red),
+                        //     );
+                        //   },
+                        //   loadingBuilder: (context, child, loadingProgress) {
+                        //     if (loadingProgress == null) {
+                        //       return child;
+                        //     }
+                        //     return Center(
+                        //       child: CircularProgressIndicator(
+                        //         value: loadingProgress.expectedTotalBytes !=
+                        //                 null
+                        //             ? loadingProgress.cumulativeBytesLoaded /
+                        //                 (loadingProgress.expectedTotalBytes ??
+                        //                     1)
+                        //             : null,
+                        //       ),
+                        //     );
+                        //   },
+                        //   fit: BoxFit.cover,
+                        // ),
                       ),
                     ),
                   ),
