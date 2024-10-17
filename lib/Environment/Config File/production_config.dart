@@ -8,8 +8,8 @@ class ProductionConfiguration implements BaseConfig {
   String get domainHost => '';
 
   @override
-  String get localDb => 'econnect_production.db';
+  String get localDb => '';
 
   @override
-  String get lastSyncId => "238080"; //"299408"; //"298865"; //'33582';
+  String get lastSyncId => "";
 }

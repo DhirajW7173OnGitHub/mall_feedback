@@ -29,8 +29,17 @@ class AttendanceCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // CircleAvatar(
+                  //   maxRadius: 30,
+                  //   child: Image.asset(
+                  //     "assets/images/person.png",
+                  //     fit: BoxFit.fill,
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   width: 6,
+                  // ),
                   Text(
                     userName,
                     style: Theme.of(context)
@@ -38,6 +47,7 @@ class AttendanceCardWidget extends StatelessWidget {
                         .bodyLarge!
                         .copyWith(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
+                  const Spacer(),
                   Container(
                     height: 24,
                     alignment: Alignment.center,

@@ -1,4 +1,5 @@
 mixin ValidationMixin {
+  //validation for Mobile digit
   String? phoneValidation(String? value) {
     if (value == null || value.isEmpty) {
       return "Enter Mobile Number";
@@ -38,8 +39,32 @@ mixin ValidationMixin {
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return "Please enter valid number";
+      return "Please enter valid Email ID";
     }
+    return null;
+  }
+
+  String? firstNameValidation(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Enter First name";
+    }
+
+    return null;
+  }
+
+  String? passwordValidation(String? value) {
+    String pattern =
+        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$';
+    RegExp regExp = RegExp(pattern);
+
+    if (value == null || value.isEmpty) {
+      return "Enter Password";
+    }
+
+    if (!regExp.hasMatch(value)) {
+      return "Password must be 8-16 characters long,\ninclude at least one uppercase letter,one lowercase letter,\none number,and one special character";
+    }
+
     return null;
   }
 }

@@ -1,13 +1,11 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_cropper/image_cropper.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:mall_app/Initial%20Pages/login_page.dart';
 import 'package:mall_app/Shared_Preference/auth_service_sharedPreference.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
-import 'package:mall_app/Utils/global_utils.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -22,8 +20,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   File? file;
   String notificationCount = '';
 
-  ImagePicker image = ImagePicker();
-  ImageCropper cropImage = ImageCropper();
+  // ImagePicker image = ImagePicker();
+  // ImageCropper cropImage = ImageCropper();
 
   @override
   void initState() {
@@ -52,7 +50,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 children: <Widget>[
                   TextButton.icon(
                     onPressed: () {
-                      getImageFromGallery();
+                      //getImageFromGallery();
                       Navigator.pop(context);
                     },
                     label: const Text('Gallery'),
@@ -65,7 +63,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   TextButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
-                      getImageFromCam();
+                      // getImageFromCam();
                     },
                     label: const Text('Camera'),
                     icon: const Icon(
@@ -82,48 +80,48 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Future<void> getImageFromCam() async {
-    var img = await ImagePicker().pickImage(source: ImageSource.camera);
+  // Future<void> getImageFromCam() async {
+  //   var img = await ImagePicker().pickImage(source: ImageSource.camera);
 
-    if (img!.path != null) {
-      CroppedFile? imageCropper = await cropImage.cropImage(
-        sourcePath: img.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        maxWidth: 512,
-        maxHeight: 512,
-      );
+  //   if (img!.path != null) {
+  //     CroppedFile? imageCropper = await cropImage.cropImage(
+  //       sourcePath: img.path,
+  //       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+  //       maxWidth: 512,
+  //       maxHeight: 512,
+  //     );
 
-      if (imageCropper != null) {
-      } else {
-        globalUtils.showNegativeSnackBar(msg: "File not found");
-      }
-    }
-  }
+  //     if (imageCropper != null) {
+  //     } else {
+  //       globalUtils.showNegativeSnackBar(msg: "File not found");
+  //     }
+  //   }
+  // }
 
-  getImageFromGallery() async {
-    //pick from gallery
-    var img = await image.pickImage(source: ImageSource.gallery);
+  // getImageFromGallery() async {
+  //   //pick from gallery
+  //   var img = await image.pickImage(source: ImageSource.gallery);
 
-    if (img!.path != null) {
-      log('Selected Image Path : ${img.path}');
-      // setState(() {
-      //   file = File(img.path);
-      // });
-      CroppedFile? imageCropper = await cropImage.cropImage(
-        sourcePath: img.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        maxWidth: 512,
-        maxHeight: 512,
-      );
+  //   if (img!.path != null) {
+  //     Logger.dataLog('Selected Image Path : ${img.path}');
+  //     // setState(() {
+  //     //   file = File(img.path);
+  //     // });
+  //     CroppedFile? imageCropper = await cropImage.cropImage(
+  //       sourcePath: img.path,
+  //       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+  //       maxWidth: 512,
+  //       maxHeight: 512,
+  //     );
 
-      if (imageCropper != null) {
-      } else {
-        globalUtils.showNegativeSnackBar(msg: "File not found");
-      }
-    }
-  }
+  //     if (imageCropper != null) {
+  //     } else {
+  //       globalUtils.showNegativeSnackBar(msg: "File not found");
+  //     }
+  //   }
+  // }
 
-  Future<bool> _clickOnLogOut() async {
+  Future<bool> clickOnLogOut() async {
     return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(

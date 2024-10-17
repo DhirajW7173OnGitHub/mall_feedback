@@ -6,9 +6,11 @@ class LocalStorageData {
   String MALL_ID = "MALL_ID";
   String LOCATION = "LOCATION";
   String PHONE = "PHONE";
+  String USERTYPE = "USERTYPE";
   String TOKEN = "TOKEN";
   String ISLOGGEDIN = "ISLOGGEDIN";
   String LASTLOGGEDINTIME = "LASTLOGGEDINTIME";
+  String CUSTOMERID = "CUSTOMERID";
 }
 
 LocalStorageData localStorageData = LocalStorageData();

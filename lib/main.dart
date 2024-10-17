@@ -1,9 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mall_app/Environment/environment.dart';
 import 'package:mall_app/Initial%20Pages/splash_page.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
+import 'package:mall_app/Utils/common_log.dart';
 import 'package:mall_app/Utils/global_utils.dart';
+
+import 'firebase_options.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,12 +20,24 @@ void main() async {
     defaultValue: Environment.DEV,
   );
 
-  //Initial instance of SharedPreference
-  await StorageUtil.getInstance();
+  Logger.enviroment = environment;
 
   Environment().initConfig(environment);
 
-  runApp(const MyApp());
+  //Firebase Initialization
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  //this code of line use for Dialog of Notitfication Permission
+  //await FirebaseMessaging.instance.requestPermission();
+
+  //Initial instance of SharedPreference
+  await StorageUtil.getInstance();
+
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -32,8 +50,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.transparent,
-        drawerTheme: const DrawerThemeData(
-          backgroundColor: Colors.white,
+        scrollbarTheme: const ScrollbarThemeData(
+          // trackColor: MaterialStatePropertyAll(Colors.purple),
+          thumbColor: MaterialStatePropertyAll(Colors.purple),
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,
@@ -57,22 +76,16 @@ class MyApp extends StatelessWidget {
           ),
         ),
         colorScheme: ColorScheme.fromSeed(
+          //brightness: Brightness.dark,
           seedColor: Colors.purple,
           primary: Colors.purple,
         ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
       ),
       builder: EasyLoading.init(),
       home: const SplashScreen(),
+      navigatorKey: navigatorKey,
     );
   }
 }
-
-// class MyHttpOverrides extends HttpOverrides {
-//   @override
-//   HttpClient createHttpClient(SecurityContext? context) {
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback =
-//           (X509Certificate cert, String host, int port) => true;
-//   }
-// }

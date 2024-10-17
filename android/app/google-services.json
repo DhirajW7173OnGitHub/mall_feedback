@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "427268826262",
+    "project_id": "mallfeedback",
+    "storage_bucket": "mallfeedback.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427268826262:android:99a5a7d4de14d5b93d4eb7",
+        "android_client_info": {
+          "package_name": "com.intouch.mall_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ8ksI6oc9DrbUCHW07dm2DK5hMurPELc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

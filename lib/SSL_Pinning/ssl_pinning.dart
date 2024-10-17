@@ -1,10 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:mall_app/Environment/environment.dart';
+import 'package:mall_app/Utils/common_log.dart';
 
 Future<SecurityContext> get globalContext async {
   const String environment = String.fromEnvironment(
@@ -13,13 +13,13 @@ Future<SecurityContext> get globalContext async {
   );
   final sslCert;
   if (environment == "DEV") {
-    log('DEVELOPMENT SERVER RUN');
+    Logger.dataLog('DEVELOPMENT SERVER RUN');
     sslCert = await rootBundle.load('assets/certificate_dev.pem');
   } else if (environment == "PROD") {
-    log('PRODUCTION SERVER RUN');
+    Logger.dataLog('PRODUCTION SERVER RUN');
     sslCert = await rootBundle.load('assets/certificate_prod.pem');
   } else {
-    log('DEVELOPMENT SERVER RUN');
+    Logger.dataLog('DEVELOPMENT SERVER RUN');
     sslCert = await rootBundle.load('assets/certificate_dev.pem');
   }
   SecurityContext securityContext = SecurityContext(withTrustedRoots: false);

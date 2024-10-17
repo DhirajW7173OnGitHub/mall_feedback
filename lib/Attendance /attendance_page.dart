@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +8,7 @@ import 'package:mall_app/Attendance%20/Widget/attendance_details_widget.dart';
 import 'package:mall_app/Shared_Preference/local_Storage_data.dart';
 import 'package:mall_app/Shared_Preference/storage_preference_util.dart';
 import 'package:mall_app/Utils/common_code.dart';
+import 'package:mall_app/Utils/common_log.dart';
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -38,7 +37,7 @@ class _AttendancePageState extends State<AttendancePage> {
     setState(() {
       //DateFormat("HH:mm:ss").format()
       endTime = res.attendance.endTime;
-      log("End Mark Time : $endTime");
+      Logger.dataLog("End Mark Time : $endTime");
     });
   }
 
@@ -194,7 +193,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 return Container();
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               var attendanceData = snapshot.data!.attendance;
               return AttendanceCardWidget(
@@ -209,17 +208,10 @@ class _AttendancePageState extends State<AttendancePage> {
           ),
         ],
       ),
-      //  SingleChildScrollView(
-      //   child:
-      // ),
     );
-
-    // SafeArea(
-    //   child:
-    //   );
   }
 
-  _getCommonCodeDialog(String msg) {
+  void _getCommonCodeDialog(String msg) {
     CommonCode.commonDialogForData(
       context,
       msg: msg,
